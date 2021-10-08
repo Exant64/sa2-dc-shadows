@@ -95,5 +95,5 @@ extern IDirect3DDevice9* device;
 DataPointer(Renderer*, dword_1A557C0, 0x1A557C0);
 extern IDirect3DVertexShader9* ninjaVertexShader;
 extern IDirect3DPixelShader9* ninjaPixelShader;
-
+extern IDirect3DVertexDeclaration9* pShadowQuadDeclaration;
 void LoadModVolShaders(const char* path);

@@ -51,87 +51,6 @@ extern "C"
 		ScreenFadeARGB.color = backup;
 	}
 
-	void DrawVolumeHook()
-	{
-		VoidFunc(UpdateObjects, 0x00470010);
-		int blendmode = RenferInfo_->Thing;
-		device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-		device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
-		device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
-		device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
-		device->SetRenderState(D3DRS_STENCILREF, 0);
-		device->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);
-		device->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);
-		device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
-		UpdateObjects();
-		//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-
-		SetShaders(4);
-		//device->SetVertexShader(ninjaVertexShader);
-		//device->SetPixelShader(ninjaPixelShader);
-		DWORD cullmode;
-		DWORD zfunc;
-		device->GetRenderState(D3DRS_CULLMODE, &cullmode);
-		device->GetRenderState(D3DRS_ZFUNC, &zfunc);
-
-		//turn off color write
-		device->SetRenderState(D3DRS_COLORWRITEENABLE, 0x00000000);
-		//make sure it doesnt ignore z buffer
-		device->SetRenderState(D3DRS_ZENABLE, true);
-		device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-		//do not write depth data
-		device->SetRenderState(D3DRS_ZWRITEENABLE, false);
-		//obviously enable stencil stuff
-		device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-		device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
-		device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
-		device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
-		device->SetRenderState(D3DRS_STENCILREF, 0x1);
-		device->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);
-		device->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);
-
-		//CCW strips
-		device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_INCR);
-		device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-		DrawPolygons();
-
-		//CW strips
-		device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_DECR);
-		device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
-		DrawPolygons();
-
-		EndDraw();
-		//restore depth write
-		device->SetRenderState(D3DRS_ZWRITEENABLE, true);
-
-		//
-		device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		device->SetRenderState(D3DRS_ZENABLE, false);
-		device->SetRenderState(D3DRS_COLORWRITEENABLE, 0x0000000F);
-		device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
-
-		device->SetRenderState(D3DRS_ZENABLE, FALSE);
-		device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-		// Only write where stencil val >= 0x81
-		device->SetRenderState(D3DRS_STENCILREF, 0x81);
-		device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
-		device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
-		DrawQuad();
-
-		device->SetRenderState(D3DRS_ZENABLE, true);
-
-		device->SetRenderState(D3DRS_ZFUNC, zfunc);
-		device->SetRenderState(D3DRS_CULLMODE, cullmode);
-		device->SetRenderState(D3DRS_STENCILENABLE, false);
-		//state->Apply();
-		RenferInfo_->Thing = blendmode;
-	}
-
 	const int sub_470D20Ptr = 0x470D20;
 	void sub_470D20(ObjectMaster* a1)
 	{
@@ -251,9 +170,17 @@ extern "C"
 		device->SetRenderState(D3DRS_STENCILREF, 0x81);
 		device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
 		device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
+
+		//if the last MagicSDK vertex declaration was PosColor, it will not set the PosColor again
+		//and it will use our last set modifier declaration which doesnt have color, and that prevents the quad
+		//from getting rendered, so we force our own PosColor declaration
+
+		device->SetVertexDeclaration(pShadowQuadDeclaration);
+
 		int shaderBackup = *(int*)0x01A5579C;
 		DrawQuad();
 		SetShaders(shaderBackup);
+
 		device->SetRenderState(D3DRS_ALPHATESTENABLE, false);
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 		//device->SetRenderState(D3DRS_SRCBLEND, srcblend);
@@ -326,7 +253,18 @@ extern "C"
 	void __cdecl sub_42CAD0Hook(signed __int16* a1, int a2)
 	{
 		Control3DShadowBegin();
+#ifdef LIGHTING
+		int EasyFlag = *(int*)0x01A55844;
+		float flag = 0;
+		if (EasyFlag)
+			flag = 1;
+		device->SetPixelShaderConstantF(216, &flag, 1);
+#endif
 		sub_42CAD0(a1, a2);
+#ifdef LIGHTING
+		flag = 0;
+		device->SetPixelShaderConstantF(216, &flag, 1);
+#endif
 		Control3DShadowEnd();
 	}
 
@@ -337,7 +275,7 @@ extern "C"
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		device = dword_1A557C0->pointerToDevice;
 		njInitModifier(device);
-	
+
 		//njSetCheapShadowMode, sets opacity for shadows on dc, restored those
 		if (!config->getBool("DCShadows", "UseBattleOpacity", false))
 		{
