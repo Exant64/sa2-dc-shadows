@@ -250,24 +250,116 @@ extern "C"
 		Control3DShadowEnd();
 	}
 	FunctionPointer(void, sub_42CAD0, (signed __int16* a1, int a2), 0x42CAD0);
+
+	enum
+	{
+		GXRender,
+		EasyRender,
+		SimpleRender,
+		EasyMultiRender,
+		SimpleMultiRender
+	};
+	int NinjaRenderMode = 0;
 	void __cdecl sub_42CAD0Hook(signed __int16* a1, int a2)
 	{
 		Control3DShadowBegin();
-#ifdef LIGHTING
-		int EasyFlag = *(int*)0x01A55844;
-		float flag = 0;
-		if (EasyFlag)
-			flag = 1;
-		device->SetPixelShaderConstantF(216, &flag, 1);
+
+#ifdef DCLIGHTING
+		
+
+		IDirect3DVertexShader9* vertexBackup;
+		IDirect3DPixelShader9* pixelBackup;
+
+		device->GetVertexShader(&vertexBackup);
+		device->GetPixelShader(&pixelBackup);
+
+		if (NinjaRenderMode > 0)
+		{
+			device->SetVertexShader(ninjaLVertexShader);
+			device->SetPixelShader(ninjaLPixelShader);
+			float flag = 0;
+			if (NinjaRenderMode == EasyRender)
+				flag = 1;
+			device->SetVertexShaderConstantF(216, &flag, 1);
+			//DoLighting_Simple(LastLightID);
+		}
 #endif
+
 		sub_42CAD0(a1, a2);
-#ifdef LIGHTING
-		flag = 0;
-		device->SetPixelShaderConstantF(216, &flag, 1);
+
+#ifdef DCLIGHTING
+		device->SetVertexShader(vertexBackup);
+		device->SetPixelShader(pixelBackup);
 #endif
+
 		Control3DShadowEnd();
 	}
 
+	void __cdecl _njCnkEasyDrawModel(NJS_CNK_MODEL* model)
+	{
+		NinjaRenderMode = EasyRender;
+		njCnkEasyDrawModel(model);
+		NinjaRenderMode = GXRender;
+	}
+
+	static void __declspec(naked) njCnkEasyDrawModelHook()
+	{
+		__asm
+		{
+			push eax // a1
+
+			// Call your __cdecl function here:
+			call _njCnkEasyDrawModel
+
+			pop eax // a1
+			retn
+		}
+	}
+
+	void __cdecl _njCnkSimpleDrawModel(NJS_CNK_MODEL* model)
+	{
+		FunctionPointer(void, sub_42E660, (NJS_CNK_MODEL*), 0x42E660);
+		NinjaRenderMode = SimpleRender;
+		sub_42E660(model);
+		NinjaRenderMode = GXRender;
+	}
+	FunctionPointer(void, sub_782420, (NJS_OBJECT* a1), 0x782420);
+	//ThiscallFunctionPointer(void, sub_7819A0, (NJS_MOTION* a1, float a2), 0x7819A0);
+	const int sub_7819A0Ptr = 0x7819A0;
+	void sub_7819A0(NJS_MOTION* a1, float a2)
+	{
+		__asm
+		{
+			mov ecx, a1
+			push a2
+			call sub_7819A0Ptr
+			add esp, 4
+		}
+	}
+	void __cdecl sub_780870(NJS_OBJECT* a2, float a3, NJS_MOTION* a4)
+	{
+		*(int*)0x25EFE54 = 0x25EFE60;
+		sub_7819A0(a4, a3);
+		*(int*)0x1D19C0C = (int)_njCnkSimpleDrawModel;
+		sub_782420(a2);
+	}
+	static void __declspec(naked) sub_780870Hook()
+	{
+		__asm
+		{
+			push ecx // a4
+			push[esp + 0Ch] // a3
+			push[esp + 0Ch] // a2
+
+			// Call your __cdecl function here:
+			call sub_780870
+
+			add esp, 4 // a2
+			add esp, 4 // a3
+			pop ecx // a4
+			retn
+		}
+	}
 	void __cdecl sub_690670(NJS_OBJECT* result)
 	{
 		NJS_OBJECT* v1; // ebp
@@ -322,6 +414,23 @@ extern "C"
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		device = dword_1A557C0->pointerToDevice;
 		njInitModifier(device);
+
+#ifdef DCLIGHTING
+		//checkpoint lighting test
+		WriteCall((void*)0x006D9F51, njCnkEasyDrawModelHook);
+		WriteCall((void*)0x006D9FFE, njCnkEasyDrawModelHook);
+		WriteCall((void*)0x006DA08A, njCnkEasyDrawModelHook);
+
+		//e_ai
+		WriteCall((void*)0x004FF92A, sub_780870Hook);
+
+		WriteCall((void*)0x0050137E, sub_780870Hook); //beetle
+
+		//WriteData((int*)0x00501395, (int)_njCnkSimpleDrawModel);
+		//WriteData((int*)0x004FF935, (int)_njCnkSimpleDrawModel);
+		
+#endif
+		
 
 		//egg quarters pillar modifiers
 		WriteJump((void*)0x690670, sub_690670H);

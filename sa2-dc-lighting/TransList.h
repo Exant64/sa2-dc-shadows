@@ -30,6 +30,7 @@ struct TransparentModelEntry
 };
 extern int ModelTransFlag;
 extern bool NinjaFlag;
+extern int LastLightID;
 void DoLighting(int a1);
 void TransList_Render();
 void TransList_Init();

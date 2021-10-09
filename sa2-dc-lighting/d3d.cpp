@@ -65,24 +65,18 @@ void LoadModVolShaders(const char* path)
 
 	device->CreateVertexDeclaration(shadowQuadDeclaration, &pShadowQuadDeclaration);
 
-#ifdef LIGHTING
+#ifdef DCLIGHTING
 	WriteJump((void*)0x00487060, DoLightingHook);
 
 	pSimpleShaderString = std::string(path);
-	pSimpleShaderString.append("\\Shader1_.hlsl");
+	pSimpleShaderString.append("\\NinjaVertex.hlsl");
 	D3DXCompileShaderFromFileA(pSimpleShaderString.c_str(), 0, 0, "main", "vs_3_0", 0, &pNinjaVertexShaderBuf, 0, 0);
 
 	pSimpleShaderString = std::string(path);
-	pSimpleShaderString.append("\\Shader2_.hlsl");
+	pSimpleShaderString.append("\\NinjaPixel.hlsl");
 	D3DXCompileShaderFromFileA(pSimpleShaderString.c_str(), 0, 0, "main", "ps_3_0", 0, &pNinjaPixelShaderBuf, 0, 0);
 
 	device->CreateVertexShader((const DWORD*)pNinjaVertexShaderBuf->GetBufferPointer(), &ninjaLVertexShader);
 	device->CreatePixelShader((const DWORD*)pNinjaPixelShaderBuf->GetBufferPointer(), &ninjaLPixelShader);
-
-	for (int i = 1; i < 5; i++) {
-		ShaderData*  shaders = *(ShaderData**)((int)struc_36Instance + 0x648 + 4 * i);
-		shaders->VertexShader->shaderData = ninjaLVertexShader;
-		shaders->PixelShader->shaderData = ninjaLPixelShader;
-	}
 #endif
 }

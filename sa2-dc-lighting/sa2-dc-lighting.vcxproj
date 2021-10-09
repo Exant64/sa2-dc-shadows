@@ -124,7 +124,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;SA2DCLIGHTING_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;SA2DCLIGHTING_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;DCLIGHTING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>F:\Coding\VSRepos\SA2ModLoaderNew\SA2ModLoader\include;F:\Coding\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -166,6 +166,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IniFile.hpp" />
+    <ClInclude Include="lighting\Trampoline.h" />
     <ClInclude Include="njCnkModifier.h" />
     <ClInclude Include="njkm.h" />
     <ClInclude Include="pch.h" />
@@ -182,6 +183,8 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="IniFile.cpp" />
+    <ClCompile Include="lighting\njCnkModelE.cpp" />
+    <ClCompile Include="lighting\Trampoline.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modmod.cpp" />
     <ClCompile Include="njCnkModifier.cpp" />

@@ -242,7 +242,9 @@ void TransList_Init()
 	//do not trans-queue ninjaflag models
 	WriteCall((void*)0x0042D211, sub_42ED60Hook);
 
+	WriteCall((void*)0x00486F47, gjSetLightColorHook);
 	WriteCall((void*)0x0048714D, gjSetLightColorHook);
+
 	WriteCall((void*)0x0042D599, sub_42D190Hook);
 	WriteCall((void*)0x0042E211, ChunkModelTransCheck);
 	WriteCall((void*)0x0042E78E, ChunkModelTransCheck);
