@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "d3d.h"
 #include "njCnkModifier.h"
 #include "data/Shouko.nja"
@@ -186,8 +186,146 @@ static void __declspec(naked) MinimalModHook()
 		retn
 	}
 }
+
+void GoalRingShadow()
+{
+	njPushMatrixEx();
+	njScale(0, 30, 5, 10);
+	float backup = object_000D8124.chunkmodel->r;
+	object_000D8124.chunkmodel->r *= 35.0f;
+	njCnkModDrawObject(&object_000D8124);
+	object_000D8124.chunkmodel->r = backup;
+	njPopMatrixEx();
+	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB4EACC);
+}
+
+//replace function that draws a shadow sprite
+void __cdecl sub_6D3B40(NJS_VECTOR* a1, float a2)
+{
+	njPushMatrixEx();
+	njTranslate(0, a1->x, a1->y + 0.1f, a1->z);
+	njScale(0,a2, 1, a2);
+	DrawEnemyShadow();
+	njPopMatrixEx();
+}
+static void __declspec(naked) sub_6D3B40Hook()
+{
+	__asm
+	{
+		push[esp + 04h] // a2
+		push edx // a1
+
+		// Call your __cdecl function here:
+		call sub_6D3B40
+
+		pop edx // a1
+		add esp, 4 // a2
+		retn
+	}
+}
+
+
+void __cdecl IronBallDisp(ObjectMaster* a1)
+{
+	float* v1; // eax
+	EntityData1* v2; // esi
+	float* v3; // edi
+	Float* v4; // eax
+	float* v5; // eax
+	float* v6; // edi
+	float* v7; // eax
+	float* v8; // edi
+	float* v9; // eax
+	float* v10; // eax
+	float* v11; // edi
+	float* v12; // ebx
+	int v13; // ecx
+	float* result; // eax
+	float a3; // [esp+1Ch] [ebp-34h]
+	float a2; // [esp+1Ch] [ebp-34h]
+	float v17; // [esp+1Ch] [ebp-34h]
+	float v18[12]; // [esp+20h] [ebp-30h] BYREF
+	
+	v2 = a1->Data1.Entity;
+	njPushMatrixEx();
+	a3 = v2->Position.y + 10.0;
+	njTranslate(0, v2->Position.x, a3, v2->Position.z);
+	if (v2->Rotation.y)
+	{
+		njRotateY(0, v2->Rotation.y);
+	}
+	
+	njSetTexture((NJS_TEXLIST*)0xB3D120);
+	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3EA4C);
+
+	njPushMatrixEx();
+	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 5.0);
+	njScale(0, v2->Scale.x + 1.0, 1, 1);
+	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3E49C);
+	njPopMatrixEx();
+
+	njPushMatrixEx();
+	a2 = (v2->Scale.x + 1.0) * 20.0;
+	njTranslate(0, a2, 0.0, 0.0);
+	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 10);
+	v13 = (int)a1->EntityData2;
+	if (*(int*)v13)
+	{
+		njRotateX(0, -*(int*)v13);
+	}
+	njSetTexture((NJS_TEXLIST*)0xB3D100);
+	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3E374);
+	njPopMatrixEx();
+
+	njPushMatrixEx();
+	njScale(0, -(v2->Scale.x + 1.0), 1, 1);
+	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3E49C);
+	njPopMatrixEx();
+
+	v17 = -((v2->Scale.x + 1.0) * 20.0);
+	njTranslate(0, v17, 0.0, 0.0);
+	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 10);
+	v13 = (int)a1->EntityData2;
+	if (*(int*)v13)
+	{
+		njRotateX(0, -*(int*)v13);
+	}
+	njRotateY(0, 0x8000);
+	njSetTexture((NJS_TEXLIST*)0xB3D100);
+	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3E374);
+	njPopMatrixEx();
+}
+
+void __cdecl UDREELDisp(ObjectMaster *a1)
+{
+	ObjectFunc(sub_6E6170, 0x6E6170);
+	ObjectFunc(sub_6E6320, 0x6E6320);
+	sub_6E6170(a1);
+	sub_6E6320(a1);
+}
+
 void Enemy_Init()
 {
+	//omochao
+	WriteCall((void*)0x006BF73B, EnemyMTXConcatHook); 
+	WriteJump((void*)0x6C0CE0, nullsub_1); //kill 2C
+
+	//udreel/pulley
+	WriteCall((void*)0x006E63CB, DrawEnemyShadow);
+	WriteData((int*)(0x006E569E), (int)UDREELDisp);
+	WriteData((int*)(0x006E56A5), (int)nullsub_1);
+
+	//ironball2
+	WriteData((int*)0x006D3C78, (int)IronBallDisp); //merges sprite shadow sub with displaysub so that the modifier hook can run before the shadows get drawn
+	WriteData((int*)0x006D3C85, (int)nullsub_1); //kills field_20 sprite shadow call
+
+	//goalring
+	WriteCall((void*)0x006C6E9E, GoalRingShadow);
+	WriteJump(GoalRing_2C, nullsub_1);
+
+	//hintbox
+	WriteCall((void*)0x006E7F34, DrawEnemyShadow); //they replaced the njCnkModDrawModel call with a sprite shadow
+
 	//chaos drive
 	WriteCall((void*)0x0048F378, EnemyMTXConcatHook);
 
@@ -206,6 +344,7 @@ void Enemy_Init()
 	WriteCall((void*)0x004FC557, EnemyMTXConcatHook);
 	WriteCall((void*)0x04FC5F1, EnemyMTXConcatHook);
 	WriteCall((void*)0x004FC685, EnemyMTXConcatHook);
+
 	//shouko/fighter jet
 	WriteJump((void*)0x4F9DA0, sub_4F9DA0);
 }

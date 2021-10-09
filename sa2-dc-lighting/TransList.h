@@ -33,3 +33,4 @@ extern bool NinjaFlag;
 void DoLighting(int a1);
 void TransList_Render();
 void TransList_Init();
+void njCnkEasyDrawModel(NJS_CNK_MODEL* a1);

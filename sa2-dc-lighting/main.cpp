@@ -268,13 +268,63 @@ extern "C"
 		Control3DShadowEnd();
 	}
 
+	void __cdecl sub_690670(NJS_OBJECT* result)
+	{
+		NJS_OBJECT* v1; // ebp
+		float* v2; // ebx
+		signed int v3; // esi
+		signed int v4; // edi
 
+		v1 = (NJS_OBJECT*)result->child;
+		if (v1)
+		{
+			v2 = _nj_current_matrix_ptr_;
+			do
+			{
+				njPushMatrixEx();
+				njTranslate(0, v1->pos[0], v1->pos[1], v1->pos[2]);
+				v3 = v1->ang[1];
+				v4 = v1->ang[0];
+				if (v1->ang[2])
+				{
+					njRotateZ(0, v1->ang[2]);
+				}
+				if (v3)
+				{
+					njRotateY(0, v3);
+				}
+				if (v4)
+				{
+					njRotateX(0, v4);
+				}
+				njCnkModDrawModel(v1->chunkmodel);
+				njPopMatrixEx();
+				v1 = (NJS_OBJECT*)v1->sibling;
+			} while (v1);
+			_nj_current_matrix_ptr_ = v2;
+		}
+	}
+	static void __declspec(naked) sub_690670H()
+	{
+		__asm
+		{
+			push eax // result
 
+			// Call your __cdecl function here:
+			call sub_690670
+
+			pop eax // result
+			retn
+		}
+	}
 	__declspec(dllexport) void Init(const char* path, const HelperFunctions& helperFunctions)
 	{
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		device = dword_1A557C0->pointerToDevice;
 		njInitModifier(device);
+
+		//egg quarters pillar modifiers
+		WriteJump((void*)0x690670, sub_690670H);
 
 		//njSetCheapShadowMode, sets opacity for shadows on dc, restored those
 		if (!config->getBool("DCShadows", "UseBattleOpacity", false))
@@ -315,7 +365,7 @@ extern "C"
 		WriteCall((void*)0x0042D61F, sub_42CAD0Hook);
 
 		//modmod, i dont know what its used for yet
-		//WriteJump((void*)0x6C7B20, MODMOD_Disp);
+		WriteJump((void*)0x6C7B20, MODMOD_Disp);
 
 		//animal shadow check disable to always render shadow
 		//WriteData<2>((char*)0x0548B66, (char)0x90);
