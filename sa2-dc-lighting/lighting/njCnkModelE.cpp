@@ -55,15 +55,22 @@ void njCnkEasyVertexVN(NJS_CNK_EASY_VERTEX& vertex)
     NJS_CNK_EASY_BUF* buf = (NJS_CNK_EASY_BUF * )vertex.vbuf;
     for(int i = 0; i < vertex.n; i++)
     {
+        
         NJS_VECTOR vert = *vec;
         NJS_VECTOR norm = vec[1];
         njCalcVector(_nj_current_matrix_ptr_, &vert, &vert, 0);
         njCalcPoint(&norm, &norm, _nj_current_matrix_ptr_);
 
-        float dot = njInnerProduct(&vertex.lx, &norm.x);
+        float dot = njInnerProduct(&vertex.lx, &norm.x) * vertex.diff;
+        if (dot < 0) dot = 0;
+        dot += vertex.ambi;
+        if (dot > 1)
+            dot = 1;
         
         buf[i].x = vert.x;
-        buf[i].x = vert.y;
+        buf[i].y = vert.y;
+        buf[i].ooz = 1.0f / vert.z;
+        buf[i].inten = dot;
 
         vec += 2;
     }
@@ -113,4 +120,117 @@ void njCnkEasyVlist(Uint16* vlist, NJS_CNK_EASY_BUF* buf)
 
         vl += ((size * 2) - 2);
     }
+}
+
+void njSetCnkTextureNum(int a1, int a2)
+{
+
+}
+
+void njSetCnkBlendMode(int a1){}
+void njCnkSetMaterial(unsigned int a1, unsigned int *a2, float* a3, float* a4, float* a5)
+{
+
+}
+
+float col[4];
+void njCnkEasyPlist(short* a1, long a2, NJS_CNK_EASY_BUF* a3)
+{
+    __int16 v5; // r3
+    __int16* v6; // r4
+    unsigned int v7; // r0
+    int v8; // r8
+    __int16 v9; // t1
+    int result; // r0
+    int v11; // r4
+    __int16 v12; // r9
+    __int16* v13; // r5
+    int v14; // r0
+    int v15; // r2
+    float v16; // s15
+    unsigned int v17; // r1
+    unsigned int* v18; // r1
+    int v19; // r1
+    int v20; // r0
+    bool v21; // zf
+    int v22; // r2
+    char v23; // r1
+    float v24; // s15
+    int v25; // r1
+    int v26; // r0
+    bool v27; // zf
+    float v29; // [sp+24h] [bp-4Ch] BYREF
+    float v30; // [sp+28h] [bp-48h]
+    float v31; // [sp+2Ch] [bp-44h]
+    float v32; // [sp+30h] [bp-40h]
+
+    while (1)
+    {
+        v6 = a1 + 1;
+        v5 = *a1;
+        v7 = *a1;
+        if (v7 == 255)
+            break;
+    LABEL_3:
+        v8 = (unsigned __int8)v5;
+        if ((unsigned __int8)v5 <= 7u)
+        {
+            switch ((char)v5)
+            {
+            case 0:
+            case 2:
+            case 3:
+                a1 = v6;
+                continue;
+            case 1:
+                a1 = v6;
+                njSetCnkBlendMode(v7);
+                v9 = *v6++;
+                v5 = v9;
+                v7 = v9;
+                if (v9 != 255)
+                    goto LABEL_3;
+                break;
+            default:
+                a1 = v6;
+                continue;
+            }
+            break;
+        }
+        if ((unsigned __int8)v5 <= 0xFu)
+        {
+            v17 = a1[1];
+            a1 += 2;
+            njSetCnkTextureNum(v7, v17);
+        }
+        else if ((unsigned __int8)v5 <= 0x3Fu)
+        {
+            v18 = (unsigned int*)(a1 + 2);
+            a1 += a1[1] + 2;
+            njCnkSetMaterial(v7, v18, col, 0, 0);
+        }
+        else
+        {
+        }
+    }
+}
+
+int _njCnkEasyDrawModel(NJS_CNK_MODEL* a1)
+{
+    int v1; // r4
+    __int16* v2; // r6
+    int v3; // r5
+    int v4; // r0
+    unsigned int v5; // r4
+    __int16* v6; // r0
+
+    if (!a1)
+        return 0;
+    //if ((nj_control_3d_flag_ & 0x100) != 0 && *(float*)(v1 + 20) > 0.0 && njCnkModelClip(v1))
+        //return -1;
+    if (a1->vlist)
+        njCnkEasyVlist((Uint16*)a1->vlist, (NJS_CNK_EASY_BUF*)0x025EFE48);
+    if (a1->plist)
+        njCnkEasyPlist(a1->plist, v5, (NJS_CNK_EASY_BUF*)0x025EFE48);
+    return 0;
 }

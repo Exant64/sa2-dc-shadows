@@ -674,18 +674,138 @@ static void __declspec(naked) TailsWalker()
     }
 }
 
+void __cdecl TikalChaos(int a1, int a2, int a3)
+{
+    int v3; // edx
+    float* v4; // esi
+    float* v5; // eax
+    float* v6; // eax
+    float* v7; // eax
+    float* v8; // eax
+    float* v9; // eax
+    float* v10; // eax
+    float* v11; // eax
+    float* v12; // eax
+    float* v13; // eax
+    float* v14; // esi
+    float v15; // [esp+1Ch] [ebp-30h] BYREF
+    float v16; // [esp+20h] [ebp-2Ch]
+    float v17; // [esp+24h] [ebp-28h]
+    float v18; // [esp+28h] [ebp-24h]
+    float v19; // [esp+2Ch] [ebp-20h]
+    float v20; // [esp+30h] [ebp-1Ch]
+    float v21; // [esp+34h] [ebp-18h]
+    float v22; // [esp+38h] [ebp-14h]
+    float v23; // [esp+3Ch] [ebp-10h]
+    float v24; // [esp+40h] [ebp-Ch]
+    float v25; // [esp+44h] [ebp-8h]
+    float v26; // [esp+48h] [ebp-4h]
+
+    _nj_control_3d_flag_ |= 0x2400u;
+    v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
+    njPushMatrixEx();
+    //if (v3 == 142)
+    {
+        njTranslate(0, *(float*)(a3 + 536), *(float*)(a3 + 540), *(float*)(a3 + 544));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njCnkModDrawObject(&object_0000A3C0);
+        njPopMatrixEx();
+
+        njPushMatrixEx();
+        njTranslate(0, *(float*)(a3 + 488), *(float*)(a3 + 492), *(float*)(a3 + 496));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njScale(0, *(float*)0xB18F54, 1, 1.1f);
+        njCnkModDrawModel(object_000D8124.chunkmodel);
+        njPopMatrixEx();
+
+        njPushMatrixEx();
+        njTranslate(0, *(float*)(a3 + 500), *(float*)(a3 + 504), *(float*)(a3 + 508));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njScale(0, *(float*)0xB18F54, 1, 1.1f);
+        njCnkModDrawModel(object_000D8124.chunkmodel);
+        njPopMatrixEx();
+
+        njPushMatrixEx();
+        njTranslate(0, *(float*)(a3 + 512), *(float*)(a3 + 516), *(float*)(a3 + 520));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njScale(0, 2.6f, 1, 1.2f);
+        njCnkModDrawModel(object_000D8124.chunkmodel);
+        njPopMatrixEx();
+
+        njPushMatrixEx();
+        njTranslate(0, *(float*)(a3 + 524), *(float*)(a3 + 528), *(float*)(a3 + 532));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njScale(0, 2.6f, 1, 1.2f);
+        njCnkModDrawModel(object_000D8124.chunkmodel);
+    }
+    _nj_control_3d_flag_ &= ~0x2400u;
+    njPopMatrixEx();
+}
+void __cdecl TikalDisp(ObjectMaster* a1)
+{
+    Tikal_Display(a1);
+    TikalChaos(a1->Data2.Character->AnimInfo.Current, (int)a1->Data1.Entity, (Uint32)a1->Data2.Character);
+    //TikalMod(a1->Data1.Entity, (Uint32)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
+}
+
+void __cdecl ChaosDisp(ObjectMaster* a1)
+{
+    Chaos_Display(a1);
+    TikalChaos(a1->Data2.Character->AnimInfo.Current, (int)a1->Data1.Entity, (Uint32)a1->Data2.Character);
+    //TikalMod(a1->Data1.Entity, (Uint32)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
+}
+
 void Player_Init(const IniFile* config)
 {
+    if (config->getBool("Characters", "Amy", true))
+    {
+        WriteData((int*)0x007172E8, (int)SonicShadowMod);
+        WriteData((int*)(0x007172FA - 4), (int)nullsub_1);
+    }
+
+    if (config->getBool("Characters", "Metal", true))
+    {
+        WriteData((int*)0x007177CA, (int)SonicShadowMod);
+        WriteData((int*)(0x007177DC-4), (int)nullsub_1);
+    }
+
+    if (config->getBool("Characters", "Chaos", true))
+    {
+        WriteData((int*)0x00728CCA, (int)ChaosDisp);
+        WriteData((int*)(0x00728CDC - 4), (int)nullsub_1);
+    }
+
+    if (config->getBool("Characters", "Tikal", true))
+    {
+        WriteData((int*)0x00728AD3, (int)TikalDisp);
+        WriteData((int*)(0x00728ADE - 4), (int)nullsub_1);
+    }
+
     if (config->getBool("Characters", "MechTails", true))
     {
         WriteJump((void*)0x748AF0, TailsWalker);
-        WriteData((int*)0x00741088, (int)nullsub_1);
+        WriteData((int*)(0x0074108C - 4), (int)nullsub_1);
     }
 
     if (config->getBool("Characters", "MechEggman", true))
     {
         WriteJump((void*)0x745310, EggWalkerMod);
-        WriteData((int*)0x00740E28, (int)nullsub_1);
+        WriteData((int*)(0x00740E2C - 4), (int)nullsub_1);
     }
 
     if (config->getBool("Characters", "SonicShadow", true))
@@ -698,13 +818,13 @@ void Player_Init(const IniFile* config)
 	if (config->getBool("Characters", "Knuckles", true))
 	{
 		WriteJump((void*)0x730100, KnucklesMod);
-		WriteJump((void*)0x0072DCE0, nullsub_1);
+        WriteData((int*)(0x007283E8 - 4), (int)nullsub_1);
 	}
 
     if (config->getBool("Characters", "Rouge", true))
     {
         WriteJump((void*)0x7311E0, RougeMod);
-        WriteJump((void*)0x0072E390, nullsub_1);
+        WriteData((int*)(0x00728805 - 4), (int)nullsub_1);
     }
 
     if (config->getBool("Characters", "Tails", true))
