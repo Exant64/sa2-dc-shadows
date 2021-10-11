@@ -15,6 +15,7 @@
 #include <string>
 #include "IniFile.hpp"
 #include "player.h"
+#include "boss.h"
 
 VoidFunc(Opaque, 0x0042C030);
 VoidFunc(AlphaTestDisable, 0x0042C170);
@@ -235,13 +236,15 @@ extern "C"
 		Control3DShadowEnd();
 	}
 	FunctionPointer(int, _DrawSA2BModel, (void* a1), 0x0042BED0);
-	int DrawSA2BModelControlHook(void*a1)
+	FunctionPointer(void, GXCallDisplayList, (int arg0, unsigned int a2), 0x0041C9B0);
+	void __cdecl DrawSA2BModelControlHook(int arg0, unsigned int a2)
 	{
 		Control3DShadowBegin();
-		int retval = _DrawSA2BModel(a1);
+		GXCallDisplayList(arg0,a2);
 		Control3DShadowEnd();
-		return retval;
 	}
+
+
 	FunctionPointer(void,sub_42CF30,(signed __int16* a1, int a2),0x42CF30);
 	void __cdecl sub_42CF30Hook(signed __int16* a1, int a2)
 	{
@@ -448,6 +451,7 @@ extern "C"
 		Enemy_Init();
 		ChaoWorld_Init();
 		TransList_Init();
+		Boss_Init();
 
 		ShadowDebug = config->getBool("DCShadows", "Debug", false);
 
@@ -469,7 +473,9 @@ extern "C"
 		//appropriately set stencil mode for each draw function by checking control3d
 		WriteCall((void*)0x0056DF13, DrawModelFlagsHook);
 		WriteCall((void*)0x0056DF29, sub_56D7C0Hook);
-		WriteCall((void*)0x0042B6E3, DrawSA2BModelControlHook);
+		//WriteCall((void*)0x0042B6E3, DrawSA2BModelControlHook);
+		WriteCall((void*)0x0042BFBF, DrawSA2BModelControlHook);
+		WriteCall((void*)0x0042BF49, DrawSA2BModelControlHook);
 		WriteCall((void*)0x0042D610, sub_42CF30Hook);
 		WriteCall((void*)0x0042D61F, sub_42CAD0Hook);
 

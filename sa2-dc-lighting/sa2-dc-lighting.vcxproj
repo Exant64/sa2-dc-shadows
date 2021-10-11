@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="d3d.h" />
     <ClInclude Include="chao.h" />
+    <ClInclude Include="boss.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IniFile.hpp" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClCompile Include="chao.cpp" />
     <ClCompile Include="d3d.cpp" />
+    <ClCompile Include="boss.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="IniFile.cpp" />
@@ -200,10 +202,12 @@
     <ClCompile Include="TransList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\BigFoot.nja" />
     <None Include="data\Bunchin.nja" />
     <None Include="data\ChaoGenericShadow.nja" />
     <None Include="data\Eggman.nja" />
     <None Include="data\EggWalker.nja" />
+    <None Include="data\KartShadows.nja" />
     <None Include="data\Knuckles.nja" />
     <None Include="data\Rouge.nja" />
     <None Include="data\ShadowModifier.nja" />

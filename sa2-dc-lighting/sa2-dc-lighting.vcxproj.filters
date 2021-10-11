@@ -63,6 +63,9 @@
     <ClInclude Include="lighting\Trampoline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="boss.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -110,6 +113,9 @@
     <ClCompile Include="lighting\Trampoline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="boss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="EnemyModifier.nja">
@@ -127,5 +133,7 @@
     <None Include="data\ShadowModifier.nja" />
     <None Include="data\EggWalker.nja" />
     <None Include="data\TailsWalker.nja" />
+    <None Include="data\KartShadows.nja" />
+    <None Include="data\BigFoot.nja" />
   </ItemGroup>
 </Project>

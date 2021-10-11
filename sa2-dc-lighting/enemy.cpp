@@ -5,6 +5,7 @@
 #include <math.h>
 #include "TransList.h"
 #include "data/Bunchin.nja"
+#include "njkm.h"
 
 float FracInt;
 float njFraction(float a1)
@@ -304,8 +305,207 @@ void __cdecl UDREELDisp(ObjectMaster *a1)
 	sub_6E6320(a1);
 }
 
+DataPointer(NJS_CNK_MODEL*, off_C42148, 0xC42148);
+const int sub_693AC0Ptr = 0x693AC0;
+void sub_693AC0(int result, int a2, int a3)
+{
+	__asm
+	{
+		mov eax, result
+		mov ecx, a2
+		push a3
+		call sub_693AC0Ptr
+		add esp, 4
+	}
+}
+void C_MTXConcat(float* a1, float* a2, float* a3)
+{
+	__asm
+	{
+		mov eax, a1
+		mov edx, a2
+		mov ecx, a3
+		call C_MTXConcatptr
+	}
+}
+void __cdecl EggBeetleDisp(ObjectMaster* a1)
+{
+	ObjectFunc(sub_691280, 0x691280);
+	sub_691280(a1);
+	njPushMatrixEx();
+
+	float* v14 = *(float**)(*(int*)((int)a1 + 64) + 80);
+	if (!v14)
+	{
+		v14 = _nj_current_matrix_ptr_;
+	}
+	C_MTXConcat(_nj_current_matrix_ptr_, _nj_current_matrix_ptr_, v14);
+	if (a1->Data1.Entity->Rotation.z)
+	{
+		njRotateZ(0, -a1->Data1.Entity->Rotation.z);
+	}
+	if (a1->Data1.Entity->Rotation.x)
+	{
+		njRotateX(0, -a1->Data1.Entity->Rotation.x);
+	}
+	njRotateY(0, 0x8000);
+	
+	float v26 = off_C42148->r;
+	off_C42148->r = v26 * 1.2f;
+	njTranslate(0, 0, *(float*)0xC430AC, 0);
+	njScale(0, 1, 1.2, 1);
+	if ((unsigned __int16)*off_C42148->vlist == 34)
+	{
+		sub_693AC0(a1->Data1.Entity->Rotation.z, a1->Data1.Entity->Rotation.x, (int)off_C42148->vlist);
+		//off_C42148->vlist = v17;
+	}
+	njCnkModDrawModel(off_C42148);
+	off_C42148->r = v26;
+	njPopMatrixEx();
+}
+
+float DAT_8c500ff4 = 3.5f;
+NJS_VECTOR modVec = { 0,-200,0 };
+/*
+void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
+{
+	float fVar1;
+	int* puVar2;
+	Uint32 uVar3;
+	Uint32 uVar4;
+	float fVar5;
+	float* pfVar6;
+	float* pfVar7;
+	float* pfVar8;
+	Uint32 uVar9;
+	bool bVar10;
+	float local_a4;
+	float fStack160;
+	float local_9c;
+	NJS_CNK_MODEL local_94;
+	float local_7c[12];
+	float local_4c[12];
+
+	param_2 = sqrtf(param_2 * param_2 + param_3 * param_3);
+	local_94.plist = *(Uint32**)(PTR_PTR_DAT_8c500fec + 4);
+	local_94.center.x = *(float*)(PTR_PTR_DAT_8c500fec + 8);
+	local_94.center.y = *(float*)(PTR_PTR_DAT_8c500fec + 0xc);
+	local_94.r = param_2 * 2.0 + DAT_8c500fe8;
+	local_94.center.z = *(float*)(PTR_PTR_DAT_8c500fec + 0x10);
+	local_94.vlist = (Sint32*)SomeBuffer;
+
+	local_4c[0] = -param_3;
+	local_4c[1] = 3.5f;
+	local_4c[2] = -param_3;
+
+	local_4c[3] = local_4c[0];
+	local_4c[4] = 3.5f;
+	local_4c[5] = param_3;
+
+	local_4c[6] = param_2;
+	local_4c[7] = 3.5f;
+	local_4c[8] = local_4c[2];
+
+	local_4c[9] = local_4c[6];
+	local_4c[10] = 3.5f;
+	local_4c[11] = param_3;
+	
+	njPushUnitMatrix();
+	njRotateEx(param_1, 1);
+	//(*DAT_8c501004)(0, &local_4c, local_7c, 4);
+	for (int i = 0; i < 4; i++) //njCalcPoints
+	{
+		njCalcPoint((NJS_VECTOR*)(&local_4c[i * 3]), (NJS_VECTOR*)(&local_7c[i * 3]), _nj_current_matrix_ptr_);
+	}
+	njPopMatrixEx();
+
+	puVar2 = (int*)&modVec;
+	uVar9 = 0;
+	pfVar7 = *(float**)PTR_PTR_DAT_8c500fec;
+	uVar4 = 0;
+	*local_94.vlist = *pfVar7;
+	pfVar6 = (float*)(local_94.vlist + 1);
+	pfVar8 = pfVar7 + 2;
+	uVar3 = (Uint32)pfVar7[1] >> 0x10;
+	*pfVar6 = pfVar7[1];
+	fVar1 = 0.12f;
+	fVar5 = 70.0f;
+	while (true) {
+		bVar10 = uVar3 == 0;
+		uVar3 = uVar3 - 1;
+		if (bVar10) break;
+		pfVar7 = pfVar8 + 1;
+		pfVar8 = pfVar8 + 3;
+		if (*pfVar7 <= 0.0) {
+			fStack160 = fVar1 * (local_7c[uVar4 * 3] - *(float*)puVar2) + *(float*)puVar2 + fVar5;
+			local_a4 = fVar1 * (local_7c[uVar4 * 3 + 2] - *(float*)(puVar2 + 8)) + *(float*)(puVar2 + 8)
+				+ fVar5;
+			local_9c = *(float*)(puVar2 + 4);
+			uVar4 = uVar4 + 1;
+		}
+		else {
+			fStack160 = local_7c[uVar9 * 3];
+			local_a4 = local_7c[uVar9 * 3 + 2];
+			local_9c = local_7c[uVar9 * 3 + 1];
+			uVar9 = uVar9 + 1;
+		}
+		pfVar6[1] = fStack160;
+		uVar4 = uVar4 & 3;
+		pfVar6[2] = local_9c;
+		pfVar6 = pfVar6 + 3;
+		uVar9 = uVar9 & 3;
+		*pfVar6 = local_a4;
+	}
+	fVar5 = *pfVar8;
+	pfVar6[1] = fVar5;
+	njCnkModDrawModel(&local_94);
+	return;
+}
+*/
+#pragma pack(push, 8)
+struct __declspec(align(4)) CarData
+{
+	const char* field_0;
+	float field_4;
+	NJS_TEXLIST* field_8;
+	NJS_OBJECT* field_C;
+	NJS_TEXLIST* field_10;
+	NJS_OBJECT* a4;
+	int a1;
+	CollisionData* collisionData;
+	int colliCount;
+	float a5[8];
+	int flags;
+	NJS_OBJECT* obj2;
+	int a7;
+};
+#pragma pack(pop)
+DataArray(CarData, stru_10D9810, 0x10D9810, 1);
+void __cdecl CarDispMod(ObjectMaster* param_1)
+{
+
+}
+
+__declspec(naked) void CarDispModHook()
+{
+	__asm {
+		call njTranslate_Ptr
+		push [esp+0x3C+4+8]
+		call CarDispMod
+		add esp, 4
+		ret
+	}
+}
+
+
 void Enemy_Init()
 {
+	//WriteCall((void*)0x005E068E, CarDispModHook);
+	//WriteJump((void*)0x005E0430, CarDispMod);
+
+	//eggbeetle
+	WriteData((int*)(0x00690DE3-4), (int)EggBeetleDisp);
+
 	//omochao
 	WriteCall((void*)0x006BF73B, EnemyMTXConcatHook); 
 	WriteJump((void*)0x6C0CE0, nullsub_1); //kill 2C

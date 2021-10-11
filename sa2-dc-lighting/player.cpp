@@ -11,6 +11,7 @@
 #include "data/ShadowModifier.nja"
 #include "data/EggWalker.nja"
 #include "data/TailsWalker.nja"
+#include "data/KartShadows.nja"
 
 #pragma region Tails
 void sub_750C40(int animation, EntityData1* a2, TailsCharObj2* a3)
@@ -770,8 +771,105 @@ void __cdecl ChaosDisp(ObjectMaster* a1)
     //TikalMod(a1->Data1.Entity, (Uint32)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
 }
 
+DataArray(NJS_VECTOR*, off_1DD92B0, 0x1DD92B0, 1);
+void __cdecl sub_61C6C0Mod(ObjectMaster* obj)
+{
+    ObjectFunc(sub_61C6C0, 0x61C6C0);
+    sub_61C6C0(obj);
+
+    NJS_VECTOR* v5 = off_1DD92B0[*(int*)0x1DD92A0];
+    float* v1 = (float*)obj->EntityData2;
+    float a1[12];
+    a1[9] = v1[5] - v5->x;
+    a1[10] = v1[6] - v5->y;
+    a1[11] = v1[7] - v5->z;
+    a1[8] = a1[9] * a1[9];
+    float v6 = a1[8];
+    a1[8] = a1[10] * a1[10];
+    float v7 = v6 + a1[8];
+    a1[8] = a1[11] * a1[11];
+    a1[8] = v7 + a1[8];
+    if (a1[8] <= 25000000.0)
+    {
+        _nj_control_3d_flag_ |= 0x2400u;
+        
+        int* v29 = (int*)obj->EntityData2;
+        
+        njPushMatrixEx();
+        float a3 = *((float*)v29 + 6) + 0.01f - 2.0f;
+        njTranslate(0, *((float*)v29 + 5), a3, *((float*)v29 + 7));
+        if (v29[4])
+        {
+            njRotateZ(0, v29[4]);
+        }
+        if (v29[2])
+        {
+            njRotateX(0, v29[2]);
+        }
+        int v31 = *((int*)v29 + 26);
+        int v32 = *((int*)v29 + 3);
+        if (v31 + v32 != 0x8000)
+        {
+            njRotateY(0, v31 + v32 - 0x8000);
+        }
+        int v33 = v29[62] + v29[65];
+        if (v33)
+        {
+            njRotateZ(0, v33);
+        }
+        int v34 = v29[60] + v29[63];
+        if (v34)
+        {
+            njRotateX(0, v34);
+        }
+        int v35 = v29[61] + v29[64];
+        if (v35)
+        {
+            njRotateY(0, v35);
+        }
+        int v36 = *((int*)v29 + 18);
+        switch (v36)
+        {
+        case 0:
+            njRotateY(0, 0x4000);
+            njCnkModDrawObject(&object_00190A8C);
+            break;
+        case 1:
+            njCnkModDrawObject(&object_00190548);
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+            njCnkModDrawObject(&object_001902EC);
+            break;
+        case 8:
+            njScale(0, 5, 1, 5);
+            njCnkModDrawObject(&object_000D8124);
+            break;
+        }
+
+        _nj_control_3d_flag_ &= 0xFFFFDBFF;
+        njPopMatrixEx();
+    }
+}
+FunctionPointer(void, sub_42B530,(int a1),0x42B530);
+void __cdecl KartShadowHook(int a1)
+{
+    _nj_control_3d_flag_ |= 0x2400;
+    sub_42B530(a1);
+    _nj_control_3d_flag_ &= ~0x2400;
+}
+
 void Player_Init(const IniFile* config)
 {
+    //karts
+    WriteData((int*)(0x0061C592-4), (int)sub_61C6C0Mod);
+    WriteJump((void*)0x61CB80, nullsub_1);
+    WriteCall((void*)0x0623FBC, KartShadowHook); //enable shadow on course
+
     if (config->getBool("Characters", "Amy", true))
     {
         WriteData((int*)0x007172E8, (int)SonicShadowMod);
