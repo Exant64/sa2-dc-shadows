@@ -203,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\BigFoot.nja" />
+    <None Include="data\BoomBoo.nja" />
     <None Include="data\Bunchin.nja" />
     <None Include="data\ChaoGenericShadow.nja" />
     <None Include="data\Eggman.nja" />

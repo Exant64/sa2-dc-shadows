@@ -135,5 +135,6 @@
     <None Include="data\TailsWalker.nja" />
     <None Include="data\KartShadows.nja" />
     <None Include="data\BigFoot.nja" />
+    <None Include="data\BoomBoo.nja" />
   </ItemGroup>
 </Project>
