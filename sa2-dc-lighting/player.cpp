@@ -464,7 +464,6 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 
         njPushMatrixEx();
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x200));
-        njTranslate(0, 0, -1, 0);
         njRotateY(0, 0x8000 - a1->Rotation.y);
         njScale(0, 2.6f, 1, 1);
         njCnkModDrawModel(object_000D8124.chunkmodel);
@@ -472,7 +471,6 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 
         njPushMatrixEx();
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x20C));
-        njTranslate(0, 0, -1, 0);
         njRotateY(0, 0x8000 - a1->Rotation.y);
         njScale(0, 2.6f, 1, 1);
         njCnkModDrawModel(object_000D8124.chunkmodel);
@@ -519,7 +517,6 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 
         njPushMatrixEx();
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x200));
-        njTranslate(0, 0, -1, 0);
         njRotateY(0, 0x8000 - a1->Rotation.y);
         njScale(0, 2.6f, 1, 1);
         njCnkModDrawModel(object_000D8124.chunkmodel);
@@ -527,7 +524,6 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 
         njPushMatrixEx();
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x20C));
-        njTranslate(0, 0, -1, 0);
         njRotateY(0, 0x8000 - a1->Rotation.y);
         njScale(0, 2.6f, 1, 1);
         njCnkModDrawModel(object_000D8124.chunkmodel);
