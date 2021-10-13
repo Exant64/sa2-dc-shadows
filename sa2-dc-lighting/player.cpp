@@ -12,6 +12,7 @@
 #include "data/EggWalker.nja"
 #include "data/TailsWalker.nja"
 #include "data/KartShadows.nja"
+#include "data/Board.nja"
 
 #pragma region Tails
 void sub_750C40(int animation, EntityData1* a2, TailsCharObj2* a3)
@@ -859,8 +860,40 @@ void __cdecl KartShadowHook(int a1)
     _nj_control_3d_flag_ &= ~0x2400;
 }
 
+void __cdecl BoardDisp(ObjectMaster* a1)
+{
+    ObjectFunc(sub_6F7BE0, 0x6F7BE0);
+    sub_6F7BE0(a1);
+    if (MainCharObj1[a1->Data1.Entity->NextAction])
+    {
+        njPushMatrixEx();
+        memcpy(_nj_current_matrix_ptr_, (void*)0x1A513B0, 0x30);
+        njCnkModDrawObject(&object_00189CBC);
+        njPopMatrixEx();
+    }
+}
+
+void __cdecl BoardCityDisp(ObjectMaster* a1)
+{
+    ObjectFunc(sub_5EBCE0, 0x5EBCE0);
+    sub_5EBCE0(a1);
+    if (MainCharObj1[a1->Data1.Entity->NextAction])
+    {
+        njPushMatrixEx();
+        memcpy(_nj_current_matrix_ptr_, (void*)0x1A282F8, 0x30);
+        njCnkModDrawObject(&object_00189CBC);
+        njPopMatrixEx();
+    }
+}
+
 void Player_Init(const IniFile* config)
 {
+    //city escape shadow
+    WriteData((int*)0x005EBCB1, (int)BoardCityDisp);
+    WriteJump((void*)0x5EBFC0, nullsub_1);
+    //metal harbor shadow
+    WriteData((int*)0x006F7AE1, (int)BoardDisp);
+
     //karts
     WriteData((int*)(0x0061C592-4), (int)sub_61C6C0Mod);
     WriteJump((void*)0x61CB80, nullsub_1);
