@@ -433,7 +433,9 @@ extern "C"
 		//WriteData((int*)0x004FF935, (int)_njCnkSimpleDrawModel);
 		
 #endif
-		
+		//special objects that have a SetCOLShadow (battle shadow) call, make sure to enable the original ninja modifier shadow flag
+		WriteData((int*)0x00495F60, (int)(0x80000 | 0x2400));
+		WriteData((int*)0x00496322, (int)(~(0x80000 | 0x2400)));
 
 		//egg quarters pillar modifiers
 		WriteJump((void*)0x690670, sub_690670H);

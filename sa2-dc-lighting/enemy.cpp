@@ -497,6 +497,27 @@ __declspec(naked) void CarDispModHook()
 	}
 }
 
+void __cdecl GolemUDReel(NJS_CNK_MODEL *a1)
+{
+	njCnkEasyDrawModel(a1);
+	njScale(0, 3.6f, 1.5f, 3.6f);
+	DrawEnemyShadow();
+}
+
+static void __declspec(naked) GolemUDReelHook()
+{
+	__asm
+	{
+		push eax // a1
+
+		// Call your __cdecl function here:
+		call GolemUDReel
+
+		pop eax // a1
+		retn
+	}
+}
+
 
 void Enemy_Init()
 {
@@ -514,6 +535,10 @@ void Enemy_Init()
 	WriteCall((void*)0x006E63CB, DrawEnemyShadow);
 	WriteData((int*)(0x006E569E), (int)UDREELDisp);
 	WriteData((int*)(0x006E56A5), (int)nullsub_1);
+	//golem's udreel
+	WriteCall((void*)0x004BC47C, nullsub_1); //kill sprite shadow call that doesnt actually seem to work
+	WriteCall((void*)0x004BC3A6, GolemUDReelHook);
+	WriteCall((void*)0x04BC3B0, GolemUDReelHook);
 
 	//ironball2
 	WriteData((int*)0x006D3C78, (int)IronBallDisp); //merges sprite shadow sub with displaysub so that the modifier hook can run before the shadows get drawn
