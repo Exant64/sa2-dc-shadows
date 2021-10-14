@@ -25,11 +25,11 @@ extern "C"
 {
 	bool ShadowDebug = false;
 
-	int CheapShadow = 0x80;
+	int CheapShadow = 0x50;
 
 	void DefaultCheapShadow()
 	{
-		CheapShadow = 0x80;
+		CheapShadow = 0x50;
 	}
 	void ChaoWorldShadowInit()
 	{
@@ -47,7 +47,7 @@ extern "C"
 	{
 		int backup = ScreenFadeARGB.color;
 		ScreenFadeARGB.color = 0;
-		ScreenFadeARGB.argb.a = 0xFF - CheapShadow; //0x40 = sa2b opacity
+		ScreenFadeARGB.argb.a = 0xFF - CheapShadow;//(1.0f - (CheapShadow / 256.0f)) * 0xFF; //0x40 = sa2b opacity
 		sub_4785A0(); //abuse screenfade to draw fullscreen quad
 		ScreenFadeARGB.color = backup;
 	}

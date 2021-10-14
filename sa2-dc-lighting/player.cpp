@@ -888,10 +888,10 @@ void __cdecl BoardCityDisp(ObjectMaster* a1)
 
 void Player_Init(const IniFile* config)
 {
-    //city escape shadow
+    //city escape board shadow
     WriteData((int*)0x005EBCB1, (int)BoardCityDisp);
     WriteJump((void*)0x5EBFC0, nullsub_1);
-    //metal harbor shadow
+    //metal harbor board shadow
     WriteData((int*)0x006F7AE1, (int)BoardDisp);
 
     //karts

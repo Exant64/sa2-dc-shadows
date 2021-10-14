@@ -547,6 +547,8 @@ void Enemy_Init()
 	//goalring
 	WriteCall((void*)0x006C6E9E, GoalRingShadow);
 	WriteJump(GoalRing_2C, nullsub_1);
+	WriteCall((void*)0x006C725F, nullsub_1); //kill sprite shadows (theres a sprite shadow version and a shadowmap version?)
+	WriteCall((void*)0x006C7001, nullsub_1);
 
 	//hintbox
 	WriteCall((void*)0x006E7F34, DrawEnemyShadow); //they replaced the njCnkModDrawModel call with a sprite shadow
