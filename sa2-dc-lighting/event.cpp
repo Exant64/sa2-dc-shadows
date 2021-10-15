@@ -182,7 +182,7 @@ void FixEventMot(NJS_MOTION* pMot, NJS_OBJECT* obj, int count)
 			FixMDATA4((NJS_MDATA4*)pMot->mdata, count);
 			break;
 		default:
-			while (1) {}
+			while (1) { PrintDebug("bad mdata"); }
 			break;
 		}
 	
@@ -200,7 +200,7 @@ void FixEventEntity(EventEntityDC* entity)
 			FixEventObj(entity->obj, count);
 		}
 		if (entity->mot && !entity->obj)
-			while (1) {} //spin, debugging thing
+			while (1) { PrintDebug("motion and no object"); } //spin, debugging thing
 		if (entity->mot)
 		{
 			entity->mot = (NJS_MOTION*)ResolvePointer((int)entity->mot);
@@ -277,6 +277,9 @@ void RenderEventMods()
 
 void Event_Init()
 {
+	//kill sa2b shadows in events
+	WriteJump((void*)0x5FAC80, nullsub_1);
+
 	WriteCall((void*)0x005FAC39, RenderEventMods);
 	WriteCall((void*)0x005FFF7F, LoadEventMods);
 }
