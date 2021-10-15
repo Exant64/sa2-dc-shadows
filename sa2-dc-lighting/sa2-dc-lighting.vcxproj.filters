@@ -143,5 +143,6 @@
     <None Include="data\BigFoot.nja" />
     <None Include="data\BoomBoo.nja" />
     <None Include="data\Board.nja" />
+    <None Include="data\MeteorHerd.nja" />
   </ItemGroup>
 </Project>

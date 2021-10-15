@@ -213,6 +213,7 @@
     <None Include="data\EggWalker.nja" />
     <None Include="data\KartShadows.nja" />
     <None Include="data\Knuckles.nja" />
+    <None Include="data\MeteorHerd.nja" />
     <None Include="data\Rouge.nja" />
     <None Include="data\ShadowModifier.nja" />
     <None Include="data\Shouko.nja" />

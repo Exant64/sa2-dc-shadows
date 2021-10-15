@@ -377,6 +377,59 @@ extern "C"
 			retn
 		}
 	}
+	void __cdecl MeteorHerdLand(NJS_CNK_MODEL* a1)
+	{
+		njControl3D_Backup();
+		njControl3D_Add(0x2400);
+		njCnkEasyDrawModel(a1);
+		//njControl3D_Remove(0x2400);
+		njControl3D_Restore();
+	}
+
+	static void __declspec(naked) MeteorHerdLandHook()
+	{
+		__asm
+		{
+			push eax // a1
+
+			// Call your __cdecl function here:
+			call MeteorHerdLand
+
+			pop eax // a1
+			retn
+		}
+	}
+
+	const int sub_42B5A0Ptr = 0x42B5A0;
+	void sub_42B5A0(SA2B_Model* a1)
+	{
+		__asm
+		{
+			mov ebx, a1
+			call sub_42B5A0Ptr
+		}
+	}
+
+	void __cdecl sub_42B5A0Shad(SA2B_Model* a1)
+	{
+		njControl3D_Backup();
+		njControl3D_Add(0x2400);
+		sub_42B5A0(a1);
+		njControl3D_Restore();
+	}
+	static void __declspec(naked) sub_42B5A0Hook()
+	{
+		__asm
+		{
+			push ebx // a1
+
+			// Call your __cdecl function here:
+			call sub_42B5A0Shad
+
+			pop ebx // a1
+			retn
+		}
+	}
 	__declspec(dllexport) void Init(const char* path, const HelperFunctions& helperFunctions)
 	{
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
@@ -401,6 +454,12 @@ extern "C"
 		//special objects that have a SetCOLShadow (battle shadow) call, make sure to enable the original ninja modifier shadow flag
 		WriteData((int*)0x00495F60, (int)(0x80000 | 0x2400));
 		WriteData((int*)0x00496322, (int)(~(0x80000 | 0x2400)));
+		
+		//WriteCall((void*)0x004943BA, sub_42B5A0Hook);
+		WriteCall((void*)0x0049441D, sub_42B5A0Hook);
+		//WriteCall((void*)0x005BFD42, MeteorHerdLandHook); //enable modifiers on land
+		//WriteCall((void*)0x005BFEFD, MeteorHerdLandHook); //enable modifiers on land
+		
 
 		//egg quarters pillar modifiers
 		WriteJump((void*)0x690670, sub_690670H);

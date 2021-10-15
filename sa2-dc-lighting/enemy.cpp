@@ -6,6 +6,7 @@
 #include "TransList.h"
 #include "data/Bunchin.nja"
 #include "njkm.h"
+#include "data/MeteorHerd.nja"
 
 float FracInt;
 float njFraction(float a1)
@@ -518,9 +519,58 @@ static void __declspec(naked) GolemUDReelHook()
 	}
 }
 
+void __cdecl MeteorHerd_Tank(ObjectMaster* a1)
+{
+	njPushMatrixEx();
+	njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y, a1->Data1.Entity->Position.z);
+	if(a1->Data1.Entity->Rotation.y) njRotateY(0, a1->Data1.Entity->Rotation.y);
+	njCnkModDrawModel(&attach_000967C0);
+	njPopMatrixEx();
+	ObjectFunc(sub_5C3A60, 0x5C3A60);
+	sub_5C3A60(a1);
+	
+}
+
+void __cdecl MeteorHerd_MDCONTBOX(ObjectMaster* a1)
+{
+	njPushMatrixEx();
+	njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y, a1->Data1.Entity->Position.z);
+	if (a1->Data1.Entity->Rotation.y) njRotateY(0, a1->Data1.Entity->Rotation.y);
+	njCnkModDrawObject(&object_0008A8F4);
+	njPopMatrixEx();
+	ObjectFunc(sub_5C3E00, 0x5C3E00);
+	sub_5C3E00(a1);
+
+}
+
+void __cdecl MeteorHerd_METEOBIG(ObjectMaster* a1)
+{
+	njPushMatrixEx();
+	njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y, a1->Data1.Entity->Position.z);
+	njCnkModDrawObject(&object_00089614);
+	njPopMatrixEx();
+	ObjectFunc(sub_5C4F20, 0x5C4F20);
+	sub_5C4F20(a1);
+}
+
+void __cdecl MeteorHerd_FireBall(ObjectMaster* a1)
+{
+	njPushMatrixEx();
+	njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y, a1->Data1.Entity->Position.z);
+	njCnkModDrawObject(&object_00089614);
+	njPopMatrixEx();
+	ObjectFunc(sub_5C1370, 0x5C1370);
+	sub_5C1370(a1);
+}
 
 void Enemy_Init()
 {
+	WriteData((int*)(0x005C37D2), (int)MeteorHerd_Tank);
+	WriteData((int*)(0x005C3BBF-4), (int)MeteorHerd_MDCONTBOX);
+	WriteData((int*)(0x005C4DF6 - 4), (int)MeteorHerd_METEOBIG);
+	WriteData((int*)(0x005C12E2 - 4), (int)MeteorHerd_FireBall);
+	WriteJump((void*)0x5C5120, nullsub_1); //meteo big kill sa2b shadow
+
 	//WriteCall((void*)0x005E068E, CarDispModHook);
 	//WriteJump((void*)0x005E0430, CarDispMod);
 
