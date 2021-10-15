@@ -16,6 +16,7 @@
 #include "IniFile.hpp"
 #include "player.h"
 #include "boss.h"
+#include "event.h"
 
 VoidFunc(Opaque, 0x0042C030);
 VoidFunc(AlphaTestDisable, 0x0042C170);
@@ -326,43 +327,7 @@ extern "C"
 		sub_42E660(model);
 		NinjaRenderMode = GXRender;
 	}
-	FunctionPointer(void, sub_782420, (NJS_OBJECT* a1), 0x782420);
-	//ThiscallFunctionPointer(void, sub_7819A0, (NJS_MOTION* a1, float a2), 0x7819A0);
-	const int sub_7819A0Ptr = 0x7819A0;
-	void sub_7819A0(NJS_MOTION* a1, float a2)
-	{
-		__asm
-		{
-			mov ecx, a1
-			push a2
-			call sub_7819A0Ptr
-			add esp, 4
-		}
-	}
-	void __cdecl sub_780870(NJS_OBJECT* a2, float a3, NJS_MOTION* a4)
-	{
-		*(int*)0x25EFE54 = 0x25EFE60;
-		sub_7819A0(a4, a3);
-		*(int*)0x1D19C0C = (int)_njCnkSimpleDrawModel;
-		sub_782420(a2);
-	}
-	static void __declspec(naked) sub_780870Hook()
-	{
-		__asm
-		{
-			push ecx // a4
-			push[esp + 0Ch] // a3
-			push[esp + 0Ch] // a2
 
-			// Call your __cdecl function here:
-			call sub_780870
-
-			add esp, 4 // a2
-			add esp, 4 // a3
-			pop ecx // a4
-			retn
-		}
-	}
 	void __cdecl sub_690670(NJS_OBJECT* result)
 	{
 		NJS_OBJECT* v1; // ebp
@@ -454,6 +419,7 @@ extern "C"
 		ChaoWorld_Init();
 		TransList_Init();
 		Boss_Init();
+		Event_Init();
 
 		ShadowDebug = config->getBool("DCShadows", "Debug", false);
 

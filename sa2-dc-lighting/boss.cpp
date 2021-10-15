@@ -5,6 +5,7 @@
 #include "enemy.h"
 #include "TransList.h"
 #include "chao.h"
+#include "event.h"
 void sub_5D0620_Mod(ObjectMaster* a1)
 {
 	ObjectFunc(sub_5D0620, 0x5D0620);
@@ -37,17 +38,6 @@ void sub_5D0620_Mod(ObjectMaster* a1)
 VoidFunc(sub_612C80, 0x612C80);
 FunctionPointer(void, sub_613F20,(int a1),0x613F20);
 
-const int sub_7819A0Ptr = 0x7819A0;
-void sub_7819A0(NJS_MOTION* a1, float a2)
-{
-    __asm
-    {
-        mov ecx, a1
-        push a2
-        call sub_7819A0Ptr
-        add esp, 4
-    }
-}
 FunctionPointer(void, sub_782420, (NJS_OBJECT*), 0x782420);
 void __cdecl BossBigBogyDisp(ObjectMaster *a1)
 {
@@ -130,10 +120,13 @@ void __cdecl BossBigBogyDisp(ObjectMaster *a1)
         njScaleV_(&scl);
 
         float a2 = eax0->frame;
+        /*
         *(int*)0x25EFE54 = 0x25EFE60;          // njCnkMotion inlined
         sub_7819A0(&animation_0007C328, *(float*)&v7[52]);
         *(int*)0x1D19C0C = (int)njCnkModDrawModel;
         sub_782420(&object_0006F328);
+        */
+        ModDrawMotion(&object_0006F328, *(float*)&v7[52], &animation_0007C328);
         njPopMatrixEx();
     }
     sub_613F20(*(int*)(v4 + 12));

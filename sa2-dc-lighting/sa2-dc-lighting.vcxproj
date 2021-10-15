@@ -165,6 +165,7 @@
     <ClInclude Include="chao.h" />
     <ClInclude Include="boss.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="event.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IniFile.hpp" />
     <ClInclude Include="lighting\Trampoline.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="boss.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="event.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="lighting\njCnkModelE.cpp" />
     <ClCompile Include="lighting\Trampoline.cpp" />
