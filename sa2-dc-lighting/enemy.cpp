@@ -367,7 +367,14 @@ void __cdecl EggBeetleDisp(ObjectMaster* a1)
 
 float DAT_8c500ff4 = 3.5f;
 NJS_VECTOR modVec = { 0,-200,0 };
-/*
+Sint32 vertex_0019FB78[] = { 0x190022, 0x80000, 0xC1700000u, 0xC1700000u, 0xC1700000u, 0xC1700000u, 0xC1700000u, 0x41700000, 0xC1700000u, 0x41700000, 0xC1700000u, 0xC1700000u, 0x41700000, 0x41700000, 0x41700000, 0xC1700000u, 0xC1700000u, 0x41700000, 0xC1700000u, 0x41700000, 0x41700000, 0x41700000, 0xC1700000u, 0x41700000, 0x41700000, 0x41700000, 0xFF, 0x0 };
+
+Sint16 poly_0019FB24[] = { 0x38, 0x25, 0xC, 0x0, 0x1, 0x2, 0x1, 0x3, 0x2, 0x1, 0x5, 0x3, 0x5, 0x7, 0x3, 0x5, 0x4, 0x7, 0x4, 0x6, 0x7, 0x4, 0x0, 0x6, 0x0, 0x2, 0x6, 0x4, 0x5, 0x0, 0x5, 0x1, 0x0, 0x2, 0x3, 0x6, 0x3, 0x7, 0x6, 0xFF };
+
+NJS_CNK_MODEL attach_0019FBE4 = { vertex_0019FB78, poly_0019FB24, { 0 }, 21.2132f };
+
+NJS_OBJECT object_0019FBFC = { NJD_EVAL_UNIT_POS | NJD_EVAL_UNIT_ANG | NJD_EVAL_UNIT_SCL | NJD_EVAL_BREAK, &attach_0019FBE4, 0, 0, 0, 0, 0, 0, 1, 1, 1, NULL, NULL };
+
 void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
 {
 	float fVar1;
@@ -376,8 +383,8 @@ void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
 	Uint32 uVar4;
 	float fVar5;
 	float* pfVar6;
-	float* pfVar7;
-	float* pfVar8;
+	Uint32* pfVar7;
+	Uint32* pfVar8;
 	Uint32 uVar9;
 	bool bVar10;
 	float local_a4;
@@ -388,12 +395,12 @@ void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
 	float local_4c[12];
 
 	param_2 = sqrtf(param_2 * param_2 + param_3 * param_3);
-	local_94.plist = *(Uint32**)(PTR_PTR_DAT_8c500fec + 4);
-	local_94.center.x = *(float*)(PTR_PTR_DAT_8c500fec + 8);
-	local_94.center.y = *(float*)(PTR_PTR_DAT_8c500fec + 0xc);
-	local_94.r = param_2 * 2.0 + DAT_8c500fe8;
-	local_94.center.z = *(float*)(PTR_PTR_DAT_8c500fec + 0x10);
-	local_94.vlist = (Sint32*)SomeBuffer;
+	local_94.plist = attach_0019FBE4.plist;
+	local_94.center.x = attach_0019FBE4.center.x;
+	local_94.center.y = attach_0019FBE4.center.y;
+	local_94.r = param_2 * 2.0 + attach_0019FBE4.r;
+	local_94.center.z = attach_0019FBE4.center.z;
+	local_94.vlist = (Sint32*)&SomeBuffer;
 
 	local_4c[0] = -param_3;
 	local_4c[1] = 3.5f;
@@ -422,9 +429,9 @@ void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
 
 	puVar2 = (int*)&modVec;
 	uVar9 = 0;
-	pfVar7 = *(float**)PTR_PTR_DAT_8c500fec;
+	pfVar7 = (Uint32*)attach_0019FBE4.vlist;
 	uVar4 = 0;
-	*local_94.vlist = *pfVar7;
+	*local_94.vlist = *attach_0019FBE4.vlist;
 	pfVar6 = (float*)(local_94.vlist + 1);
 	pfVar8 = pfVar7 + 2;
 	uVar3 = (Uint32)pfVar7[1] >> 0x10;
@@ -462,7 +469,7 @@ void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
 	njCnkModDrawModel(&local_94);
 	return;
 }
-*/
+
 #pragma pack(push, 8)
 struct __declspec(align(4)) CarData
 {
@@ -484,7 +491,8 @@ struct __declspec(align(4)) CarData
 DataArray(CarData, stru_10D9810, 0x10D9810, 1);
 void __cdecl CarDispMod(ObjectMaster* param_1)
 {
-
+	Rotation a3 = { 0,0,0 };
+	FUN_8c500e06(&a3, 4, 3);
 }
 
 __declspec(naked) void CarDispModHook()
@@ -566,12 +574,12 @@ void __cdecl MeteorHerd_FireBall(ObjectMaster* a1)
 void Enemy_Init()
 {
 	WriteData((int*)(0x005C37D2), (int)MeteorHerd_Tank);
-	WriteData((int*)(0x005C3BBF-4), (int)MeteorHerd_MDCONTBOX);
+	WriteData((int*)(0x005C3BBF - 4), (int)MeteorHerd_MDCONTBOX);
 	WriteData((int*)(0x005C4DF6 - 4), (int)MeteorHerd_METEOBIG);
 	WriteData((int*)(0x005C12E2 - 4), (int)MeteorHerd_FireBall);
 	WriteJump((void*)0x5C5120, nullsub_1); //meteo big kill sa2b shadow
 
-	//WriteCall((void*)0x005E068E, CarDispModHook);
+	//WriteCall((void*)0x005E0749, CarDispMod);
 	//WriteJump((void*)0x005E0430, CarDispMod);
 
 	//eggbeetle
