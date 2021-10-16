@@ -127,7 +127,7 @@ void FixMDATA(void* data, int count, int mdata)
 			int mdataPtr = *(int*)(pData + j * 4);
 			if (mdataPtr >= EVENT_DC_KEY && mdataPtr < 0x0C900000)
 				mdataPtr = (mdataPtr - EVENT_DC_KEY) + (int)EventLoadingBuffer;
-			*(int*)(pData + j * 4) = mdataPtr;
+			*(int*)(pData + j * 4) = mdataPtr;	
 		}
 		pData += (4 * 2 * mdata);
 	}
@@ -178,17 +178,18 @@ void FixEventEntity(EventEntityDC* entity)
 	}
 }
 
-const int sub_428B90Ptr = 0x428B90;
-int sub_428B90(void* a3, int a4, const char* a5)
+const int sub_4532C0Ptr = 0x4532C0;
+int sub_4532C0(void* a3, int a4, const char* a5)
 {
 	int retval;
 	__asm {
-		push a4
+		mov esi, a5
+		mov edi, a4
+
 		push a3
-		mov ecx, a5
-		call sub_428B90Ptr
+		call sub_4532C0Ptr
 		mov retval, eax
-		add esp,8
+		add esp, 4
 	}
 	return retval;
 }
@@ -204,25 +205,28 @@ void sub_426670(const char* a1)
 		call sub_426670Ptr
 	}
 }
+VoidFunc(sub_600210, 0x600210);
 void __cdecl LoadEventMods(void * a1)
 {
-	FixEventFile(a1);
+	//FixEventFile(a1);
+	sub_600210();
 
 	sub_426670("..");
 
-	char v38[255];
+	char v38[32];
 	sprintf(v38, "e%04d.prs", *(int*)0x1A28AF4);
 	int v24;
-	v24 = sub_428B90(&SomeBuffer, 0, v38);
+	v24 = sub_4532C0((void*)0x01DEFE20, 0, v38);
+
 	sub_426670("EVENT");
+
 	if (v24 < 0) 
 	{
 		PrintDebug("failed to load DC event");
 		return;
 	}
 	
-	PRSDec((unsigned __int8*)&SomeBuffer, (uint8_t*)EventLoadingBuffer);
-
+	PRSDec((unsigned __int8*)0x01DEFE20, (uint8_t*)EventLoadingBuffer);
 	EventHeaderDC* header = (EventHeaderDC*)EventLoadingBuffer;
 
 	ResolvePointer<EventSceneDC>(header->pScenes);
@@ -253,5 +257,5 @@ void Event_Init()
 	WriteJump((void*)0x5FAC80, nullsub_1);
 
 	WriteCall((void*)0x005FAC39, RenderEventMods);
-	WriteCall((void*)0x005FFF7F, LoadEventMods);
+	WriteCall((void*)0x005FFFE1, LoadEventMods);
 }
