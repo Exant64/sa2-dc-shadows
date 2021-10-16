@@ -52,12 +52,8 @@ void __cdecl ModDrawMotion(NJS_OBJECT* a2, float a3, NJS_MOTION* a4)
 
 void RenderEventModScene(int scene)
 {
-	if (!DCEvent || !DCEvent->pScenes)
+	if (!DCEvent->pScenes || DCEvent->sceneCount != *(int*)(0x0204FE20 + 8)) //if the scenecount isnt equal to the gc scenecount, it would break so stop rendering
 		return;
-	if (DCEvent->sceneCount != *(int*)(0x0204FE20 + 8)) //if the scenecount isnt equal to the gc scenecount, it would break so stop rendering
-		return;
-
-	
 
 	EventSceneDC* pScene = &DCEvent->pScenes[scene];
 	for (int i = 0; i < pScene->entityCount; i++)
@@ -222,6 +218,8 @@ void __cdecl LoadEventMods(void * a1)
 
 	if (v24 < 0) 
 	{
+		DCEvent->pScenes = 0;
+		DCEvent->sceneCount = 0;
 		PrintDebug("failed to load DC event");
 		return;
 	}
