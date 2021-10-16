@@ -77,14 +77,6 @@ void RenderEventModScene(int scene)
 
 
 FunctionPointer(void, sub_5FC170,(NJS_OBJECT* a1, void* baseAddress),0x5FC170);
-/*
-int ResolvePointer(int p)
-{
-	if (p >= EVENT_DC_KEY && p < 0x0C900000)
-		return (p - EVENT_DC_KEY) + (int)EventLoadingBuffer;
-	return p;
-}
-*/
 
 template<typename T>
 void ResolvePointer(T* & p)
@@ -97,8 +89,6 @@ void ResolvePointer(T* & p)
 
 void FixEventMdl(NJS_CNK_MODEL* pMdl)
 {
-	//pMdl->vlist = (Sint32*)ResolvePointer((int)pMdl->vlist);
-	//pMdl->plist = (Sint16*)ResolvePointer((int)pMdl->plist);
 	ResolvePointer<Sint32>(pMdl->vlist);
 	ResolvePointer<Sint16>(pMdl->plist);
 }
@@ -117,59 +107,15 @@ void FixEventObj(NJS_OBJECT* a1, int& count)
 		if (a1->child) 
 		{
 			ResolvePointer<NJS_OBJECT>(a1->child);
-			//a1->child = (NJS_OBJECT*)ResolvePointer((int)a1->child);
 			FixEventObj(a1->child, count);
 		}
 
 		if (a1->sibling)
-			ResolvePointer<NJS_OBJECT>(a1->sibling);//a1->sibling = (NJS_OBJECT*)ResolvePointer((int)a1->sibling);
+			ResolvePointer<NJS_OBJECT>(a1->sibling);
 		
 		a1 = a1->sibling;
 	} while (a1);
 }
-
-/*
-void FixMDATA1(NJS_MDATA1* data, int count)
-{
-	for (int i = 0; i < count; i++) 
-	{
-		data->p[0] = (void*)ResolvePointer((int)data->p[0]);
-		data++;
-	}
-}
-
-void FixMDATA2(NJS_MDATA2* data, int count)
-{
-	for (int i = 0; i < count; i++) 
-	{
-		data->p[0] = (void*)ResolvePointer((int)data->p[0]);
-		data->p[1] = (void*)ResolvePointer((int)data->p[1]);
-		data++;
-	}
-}
-
-void FixMDATA3(NJS_MDATA3* data, int count)
-{
-	for (int i = 0; i < count; i++) 
-	{
-		data->p[0] = (void*)ResolvePointer((int)data->p[0]);
-		data->p[1] = (void*)ResolvePointer((int)data->p[1]);
-		data->p[2] = (void*)ResolvePointer((int)data->p[2]);
-		data++;
-	}
-}
-
-void FixMDATA4(NJS_MDATA4* data, int count)
-{
-	for (int i = 0; i < count; i++) {
-		data->p[0] = (void*)ResolvePointer((int)data->p[0]);
-		data->p[1] = (void*)ResolvePointer((int)data->p[1]);
-		data->p[2] = (void*)ResolvePointer((int)data->p[2]);
-		data->p[3] = (void*)ResolvePointer((int)data->p[3]);
-		data++;
-	}
-}
-*/
 
 void FixMDATA(void* data, int count, int mdata)
 {
@@ -189,44 +135,24 @@ void FixMDATA(void* data, int count, int mdata)
 
 void FixEventMot(NJS_MOTION* pMot, NJS_OBJECT* obj, int count)
 {
-	//pMot->mdata = (void*)ResolvePointer((int)pMot->mdata);
 	ResolvePointer<void>(pMot->mdata);
-		int mcount = 0;
-		if (pMot->type & NJD_MTYPE_POS_0)
-			mcount++;
-		if (pMot->type & NJD_MTYPE_ANG_1)
-			mcount++;
-		if (pMot->type & NJD_MTYPE_SCL_2)
-			mcount++;
-		if (pMot->type & NJD_MTYPE_VEC_3)
-			mcount++;
-		if (pMot->type & NJD_MTYPE_VERT_4)
-			mcount++;
-		if (pMot->type & NJD_MTYPE_QUAT_1)
-			mcount++;
-		/*
-		switch (mcount)
-		{
-		case 1:
-			FixMDATA1((NJS_MDATA1*)pMot->mdata, count);
-			break;
-		case 2:
-			FixMDATA2((NJS_MDATA2*)pMot->mdata, count);
-			break;
-		case 3:
-			FixMDATA3((NJS_MDATA3*)pMot->mdata, count);
-			break;
-		case 4:
-			FixMDATA4((NJS_MDATA4*)pMot->mdata, count);
-			break;
-		default:
-			while (1) { PrintDebug("bad mdata"); }
-			break;
-		}
-		*/
-		if(mcount < 1 || mcount > 4)
-			while (1) { PrintDebug("bad mdata"); }
-		FixMDATA(pMot->mdata, count, mcount);
+	int mcount = 0;
+	if (pMot->type & NJD_MTYPE_POS_0)
+		mcount++;
+	if (pMot->type & NJD_MTYPE_ANG_1)
+		mcount++;
+	if (pMot->type & NJD_MTYPE_SCL_2)
+		mcount++;
+	if (pMot->type & NJD_MTYPE_VEC_3)
+		mcount++;
+	if (pMot->type & NJD_MTYPE_VERT_4)
+		mcount++;
+	if (pMot->type & NJD_MTYPE_QUAT_1)
+		mcount++;
+
+	if(mcount < 1 || mcount > 4) while (1) { PrintDebug("bad mdata"); }
+
+	FixMDATA(pMot->mdata, count, mcount);
 }
 
 void FixEventEntity(EventEntityDC* entity)
@@ -237,15 +163,14 @@ void FixEventEntity(EventEntityDC* entity)
 		int count = 0;
 		if (entity->obj)
 		{
-			//entity->obj = (NJS_OBJECT*)ResolvePointer((int)entity->obj);
 			ResolvePointer<NJS_OBJECT>(entity->obj);
+
 			FixEventObj(entity->obj, count);
 		}
 		if (entity->mot && !entity->obj)
 			while (1) { PrintDebug("motion and no object"); } //spin, debugging thing
 		if (entity->mot)
 		{
-			//entity->mot = (NJS_MOTION*)ResolvePointer((int)entity->mot);
 			ResolvePointer<NJS_MOTION>(entity->mot);
 
 			FixEventMot(entity->mot, entity->obj, count);
@@ -300,14 +225,12 @@ void __cdecl LoadEventMods(void * a1)
 
 	EventHeaderDC* header = (EventHeaderDC*)EventLoadingBuffer;
 
-	//header->pScenes = (EventSceneDC*)ResolvePointer((int)header->pScenes);
 	ResolvePointer<EventSceneDC>(header->pScenes);
 
 	for (int i = 0; i <= header->sceneCount; i++)
 	{
 		if (header->pScenes[i].entities) 
 		{
-			//header->pScenes[i].entities = (EventEntityDC*)ResolvePointer((int)header->pScenes[i].entities);
 			ResolvePointer<EventEntityDC>(header->pScenes[i].entities);
 
 			for (int j = 0; j < header->pScenes[i].entityCount; j++)
