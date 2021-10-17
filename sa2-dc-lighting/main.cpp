@@ -528,7 +528,9 @@ extern "C"
 		ChaoWorld_Init();
 		TransList_Init();
 		Boss_Init();
-		Event_Init();
+
+		if (config->getBool("DCShadows", "Cutscenes", true))
+			Event_Init();
 
 		ShadowDebug = config->getBool("DCShadows", "Debug", false);
 
