@@ -202,11 +202,6 @@ extern "C"
 		sub_470D20(ObjectLists[0]);
 	}
 
-
-
-
-	
-
 	void Control3DShadowBegin()
 	{
 		if (_nj_control_3d_flag_ & NJD_CONTROL_3D_SHADOW)
@@ -430,11 +425,66 @@ extern "C"
 			retn
 		}
 	}
+	void(__cdecl* DisplayDebugString)(int loc, const char* str);
+	void __cdecl DisplayTitle_(ObjectMaster* a1)
+	{
+		switch (a1->Data1.Entity->Action)
+		{
+		case 0:
+			DisplayDebugString(0xE001A, "GAME:");
+			DisplayDebugString(0x13001A, "1P ONLY");
+			break;
+		case 1:
+			DisplayDebugString(0xE001A, "GAME:");
+			DisplayDebugString(0x13001A, "2P 3POINTS MATCH");
+			break;
+		case 2:
+			DisplayDebugString(0xE001A, "GAME:");
+			DisplayDebugString(0x13001A, "2P 1POINT MATCH");
+			break;
+		case 3:
+			DisplayDebugString(0xE001A, "TEST:");
+			DisplayDebugString(0x13001A, "EVENT");
+			break;
+		case 4:
+			DisplayDebugString(0xE001A, "DEMO:");
+			DisplayDebugString(0x13001A, "1P ONLY");
+			break;
+		case 5:
+			DisplayDebugString(0xE001A, "DEMO:");
+			DisplayDebugString(0x13001A, "2P");
+			break;
+		case 6:
+			DisplayDebugString(0xE001A, "DEMO:");
+			DisplayDebugString(0x13001A, "LOOK PREVIOUS TAKEN ONE");
+			break;
+		case 7:
+			DisplayDebugString(0xE001A, "PLAY:");
+			DisplayDebugString(0x13001A, "FROM HERO");
+			break;
+		case 8:
+			DisplayDebugString(0xE001A, "PLAY:");
+			DisplayDebugString(0x13001A, "FROM DARK");
+			break;
+		case 9:
+			DisplayDebugString(0xE001A, "PLAY:");
+			DisplayDebugString(0x13001A, "FROM LAST");
+			break;
+		}
+		DisplayTitle(a1);
+	}
 	__declspec(dllexport) void Init(const char* path, const HelperFunctions& helperFunctions)
 	{
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		device = dword_1A557C0->pointerToDevice;
-		njInitModifier(device);
+		njInitModifier();
+
+		/*
+		//temporary, restores debug menu, gonna move this to a different mod at some point, just messing around
+		DisplayDebugString = helperFunctions.DisplayDebugString;
+		WriteData((int*)0x434687, (int)0x8b8f98);
+		WriteData((int*)(0x0051A3FD-4), (int)DisplayTitle_);
+		*/
 
 #ifdef DCLIGHTING
 		//checkpoint lighting test

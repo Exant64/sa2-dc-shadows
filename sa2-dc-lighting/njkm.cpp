@@ -2,6 +2,7 @@
 #include "SA2ModLoader.h"
 #include "njkm.h"
 #include <d3dx9.h>
+#include "d3d.h"
 
 MODTRI ModifierVertexBuf[4096];
 PMODTRI pModSQ = &ModifierVertexBuf[0];
@@ -35,15 +36,15 @@ static const D3DVERTEXELEMENT9 drawPolygonDeclaration[] =
 	{0,  0, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,   0},
 	D3DDECL_END()
 };
-IDirect3DDevice9* modifierDrawDevice;
+
 void DrawPolygons()
 {
 	int vertCount = ((Uint32)pModSQ - (Uint32)ModifierVertexBuf) / sizeof(MODTRI);
 
-	modifierDrawDevice->SetVertexDeclaration(njDrawPolygonDeclaration);
-	modifierDrawDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vertCount , &ModifierVertexBuf[0], 12);
+	device->SetVertexDeclaration(njDrawPolygonDeclaration);
+	device->DrawPrimitiveUP(D3DPT_TRIANGLELIST, vertCount , &ModifierVertexBuf[0], 12);
 
-	modifierDrawDevice->SetStreamSource(0, nullptr, 0, 0);
+	device->SetStreamSource(0, nullptr, 0, 0);
 	
 }
 
@@ -51,8 +52,7 @@ void EndDraw()
 {
 	pModSQ = ModifierVertexBuf;
 }
-void njInitModifier(IDirect3DDevice9* device)
+void njInitModifier()
 {
-	modifierDrawDevice = device;
-	modifierDrawDevice->CreateVertexDeclaration(drawPolygonDeclaration, &njDrawPolygonDeclaration);
+	device->CreateVertexDeclaration(drawPolygonDeclaration, &njDrawPolygonDeclaration);
 }

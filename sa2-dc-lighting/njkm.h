@@ -10,6 +10,6 @@ typedef struct MODTRI {
 extern MODTRI ModifierVertexBuf[];
 extern PMODTRI pSQ;
 
-void njInitModifier(IDirect3DDevice9* device);
+void njInitModifier();
 void DrawPolygons();
 void EndDraw();
