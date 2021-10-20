@@ -9,7 +9,7 @@ typedef struct MODTRI {
 
 extern MODTRI ModifierVertexBuf[];
 extern PMODTRI pSQ;
-
+extern PMODTRI pModEndSQ;
 void njInitModifier();
 void DrawPolygons();
 void EndDraw();

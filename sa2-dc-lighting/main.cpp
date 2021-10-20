@@ -479,12 +479,11 @@ extern "C"
 		device = dword_1A557C0->pointerToDevice;
 		njInitModifier();
 
-		/*
 		//temporary, restores debug menu, gonna move this to a different mod at some point, just messing around
 		DisplayDebugString = helperFunctions.DisplayDebugString;
-		WriteData((int*)0x434687, (int)0x8b8f98);
-		WriteData((int*)(0x0051A3FD-4), (int)DisplayTitle_);
-		*/
+		//WriteData((int*)0x434687, (int)0x8b8f98);
+		//WriteData((int*)(0x0051A3FD-4), (int)DisplayTitle_);
+		
 
 #ifdef DCLIGHTING
 		//checkpoint lighting test

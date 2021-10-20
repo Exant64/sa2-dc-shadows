@@ -28,6 +28,11 @@ PMODTRI njCnkModPolygon(Uint16* plist, NJS_CNK_MOD_BUF* buf, Uint16 val, PMODTRI
 
     do
     {
+        if (pSQ >= pModEndSQ)
+        {
+            PrintDebug("WARNING: mod buf full");
+            return pSQ;
+        }
         NJS_CNK_MOD_BUF* tri1 = &buf[*plist++];
         NJS_CNK_MOD_BUF* tri2 = &buf[*plist++];
         NJS_CNK_MOD_BUF* tri3 = &buf[*plist++];

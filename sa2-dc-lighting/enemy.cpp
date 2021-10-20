@@ -529,11 +529,14 @@ static void __declspec(naked) GolemUDReelHook()
 
 void __cdecl MeteorHerd_Tank(ObjectMaster* a1)
 {
-	njPushMatrixEx();
-	njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y, a1->Data1.Entity->Position.z);
-	if(a1->Data1.Entity->Rotation.y) njRotateY(0, a1->Data1.Entity->Rotation.y);
-	njCnkModDrawModel(&attach_000967C0);
-	njPopMatrixEx();
+	if (!a1->Data1.Entity->NextAction) 
+	{
+		njPushMatrixEx();
+		njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y, a1->Data1.Entity->Position.z);
+		if (a1->Data1.Entity->Rotation.y) njRotateY(0, a1->Data1.Entity->Rotation.y);
+		njCnkModDrawModel(&attach_000967C0);
+		njPopMatrixEx();
+	}
 	ObjectFunc(sub_5C3A60, 0x5C3A60);
 	sub_5C3A60(a1);
 	

@@ -4,8 +4,10 @@
 #include <d3dx9.h>
 #include "d3d.h"
 
-MODTRI ModifierVertexBuf[4096];
+#define MODVERTCOUNT 5000
+MODTRI ModifierVertexBuf[MODVERTCOUNT];
 PMODTRI pModSQ = &ModifierVertexBuf[0];
+PMODTRI pModEndSQ = &ModifierVertexBuf[MODVERTCOUNT];
 
 PMODTRI njStartModifier()
 {
