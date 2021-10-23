@@ -12,6 +12,7 @@
 #include "data/EggWalker.nja"
 #include "data/TailsWalker.nja"
 #include "data/KartShadows.nja"
+#include "data/TikalChaos.nja"
 #include "data/Board.nja"
 
 #pragma region Tails
@@ -445,7 +446,10 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     {
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x218));
         njRotateY(0, 0x8000 - a1->Rotation.y);
-        njCnkModDrawObject(&object_000145FC);
+        if (a3->base.CharID2 == Characters_Amy)
+            njCnkModDrawObject(&object_0000BC64);
+        else
+            njCnkModDrawObject(&object_000145FC);
         njPopMatrixEx();
 
         njPushMatrixEx();
@@ -497,13 +501,15 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     else
     {
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x218));
-        njRotateY(0, 0x8000 - a1->Rotation.y);
-        njCnkModDrawObject(&object_00015690);
+        njRotateY(0, 0x8000 - a1->Rotation.y); 
+        if (a3->base.CharID2 == Characters_MetalSonic)
+            njCnkModDrawObject(&object_00008C3C);
+        else
+            njCnkModDrawObject(&object_00015690);
         njPopMatrixEx();
 
         njPushMatrixEx();
-        njTranslateEx((NJS_VECTOR*)(charObjHack + 0x1E8));
-        njTranslate(0, 0, -1, 0);
+        njTranslateEx((NJS_VECTOR*)(charObjHack + 0x1E8));        
         njRotateY(0, 0x8000 - a1->Rotation.y);
         njScale(0, 1, 1, 0.7f);
         njCnkModDrawModel(object_000D8124.chunkmodel);
@@ -511,7 +517,6 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 
         njPushMatrixEx();
         njTranslateEx((NJS_VECTOR*)(charObjHack + 0x1F4));
-        njTranslate(0, 0, -1, 0);
         njRotateY(0, 0x8000 - a1->Rotation.y);
         njScale(0, 1, 1, 0.7f);
         njCnkModDrawModel(object_000D8124.chunkmodel);
@@ -621,7 +626,7 @@ void __cdecl sub_748AF0(int a1, EntityData1* a2, int a3)
     float* v8; // eax
     float* v9; // eax
     float* v10; // esi
-
+    CharObj2Base* obj2 = (CharObj2Base*)a3;
     _nj_control_3d_flag_ |= 0x2400u;
     v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
     njPushMatrixEx();
@@ -632,7 +637,10 @@ void __cdecl sub_748AF0(int a1, EntityData1* a2, int a3)
         {
             njRotateY(0, 0x8000 - a2->Rotation.y);
         }
-        njCnkModDrawObject(&object_0000CFEC);
+        if(obj2->CharID2 == Characters_ChaoWalker)
+            njCnkModDrawObject(&object_0000C380);
+        else
+            njCnkModDrawObject(&object_0000CFEC);
         njPopMatrixEx();
 
         njPushMatrixEx();
@@ -710,7 +718,11 @@ void __cdecl TikalChaos(int a1, int a2, int a3)
         {
             njRotateY(0, 0x8000 - *(int*)(a2 + 12));
         }
-        njCnkModDrawObject(&object_0000A3C0);
+        CharObj2Base* base = (CharObj2Base*)a3;
+        if (base->CharID2 == Characters_Tikal)
+            njCnkModDrawObject(&object_00008218);
+        else
+            njCnkModDrawObject(&object_0000B2A4);
         njPopMatrixEx();
 
         njPushMatrixEx();
@@ -928,12 +940,14 @@ void Player_Init(const IniFile* config)
     {
         WriteJump((void*)0x748AF0, TailsWalker);
         WriteData((int*)(0x0074108C - 4), (int)nullsub_1);
+        WriteData((int*)(0x0074127A - 4), (int)nullsub_1);
     }
 
     if (config->getBool("Characters", "MechEggman", true))
     {
         WriteJump((void*)0x745310, EggWalkerMod);
         WriteData((int*)(0x00740E2C - 4), (int)nullsub_1);
+        WriteData((int*)(0x0074145A - 4), (int)nullsub_1);
     }
 
     if (config->getBool("Characters", "SonicShadow", true))

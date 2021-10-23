@@ -144,5 +144,6 @@
     <None Include="data\BoomBoo.nja" />
     <None Include="data\Board.nja" />
     <None Include="data\MeteorHerd.nja" />
+    <None Include="data\TikalChaos.nja" />
   </ItemGroup>
 </Project>
