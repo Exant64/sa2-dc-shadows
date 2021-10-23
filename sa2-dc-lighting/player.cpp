@@ -433,7 +433,8 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     int charObjHack = (int)a3;
     njControl3D_Add(0x2400);
     njPushMatrixEx();
-    if (v4 && v4 == 6)
+    //spindash or rolling
+    if (animation == 11 || animation == 12)
     {
         njTranslate(0, a1->Position.x, a1->Position.y + 0.3f, a1->Position.z);
         njRotateY(0, 0x8000 - a1->Rotation.y);
@@ -486,7 +487,7 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     int charObjHack = (int)a3;
     njControl3D_Add(0x2400);
     njPushMatrixEx();
-    if (v4 != 0x41 && v4 == 0x47)
+    if (animation == 11 || animation == 12)
     {
         njTranslate(0, a1->Position.x, a1->Position.y + 0.3f, a1->Position.z);
         njRotateY(0, 0x8000 - a1->Rotation.y);
