@@ -576,6 +576,9 @@ void __cdecl MeteorHerd_FireBall(ObjectMaster* a1)
 
 void Enemy_Init()
 {
+	//generic pickupable displaysub
+	WriteCall((void*)0x006BC8CD, EnemyMTXConcatHook);
+
 	WriteData((int*)(0x005C37D2), (int)MeteorHerd_Tank);
 	WriteData((int*)(0x005C3BBF - 4), (int)MeteorHerd_MDCONTBOX);
 	WriteData((int*)(0x005C4DF6 - 4), (int)MeteorHerd_METEOBIG);

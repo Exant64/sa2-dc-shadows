@@ -207,10 +207,12 @@
     <None Include="data\BigFoot.nja" />
     <None Include="data\Board.nja" />
     <None Include="data\BoomBoo.nja" />
+    <None Include="data\BossMissile.nja" />
     <None Include="data\Bunchin.nja" />
     <None Include="data\ChaoGenericShadow.nja" />
     <None Include="data\Eggman.nja" />
     <None Include="data\EggWalker.nja" />
+    <None Include="data\FlyingDog.nja" />
     <None Include="data\KartShadows.nja" />
     <None Include="data\Knuckles.nja" />
     <None Include="data\MeteorHerd.nja" />

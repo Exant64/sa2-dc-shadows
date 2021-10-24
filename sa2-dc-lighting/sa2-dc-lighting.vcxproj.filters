@@ -145,5 +145,7 @@
     <None Include="data\Board.nja" />
     <None Include="data\MeteorHerd.nja" />
     <None Include="data\TikalChaos.nja" />
+    <None Include="data\FlyingDog.nja" />
+    <None Include="data\BossMissile.nja" />
   </ItemGroup>
 </Project>

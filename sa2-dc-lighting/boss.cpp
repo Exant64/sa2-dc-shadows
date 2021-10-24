@@ -2,6 +2,8 @@
 #include "njCnkModifier.h"
 #include "data/BigFoot.nja"
 #include "data/BoomBoo.nja"
+#include "data/FlyingDog.nja"
+#include "data/BossMissile.nja"
 #include "enemy.h"
 #include "TransList.h"
 #include "chao.h"
@@ -20,13 +22,13 @@ void sub_5D0620_Mod(ObjectMaster* a1)
 	njPopMatrixEx();
 
 	njPushMatrixEx();
-	njTranslateEx((NJS_VECTOR*)(0x1A27E84 + 12));
+	njTranslateEx((NJS_VECTOR*)(0x1A27F44));
 	njRotateY(0, a1->Data1.Entity->Rotation.y + 0x4000);
 	njCnkModDrawObject(&object_000F5EC0);
 	njPopMatrixEx();
 
 	njPushMatrixEx();
-	njTranslateEx((NJS_VECTOR*)(0x1A27E84 + 12 + 12));
+	njTranslateEx((NJS_VECTOR*)(0x1A27EFC));
 	njRotateY(0, a1->Data1.Entity->Rotation.y + 0x4000);
 	njRotateY(0, 0x8000);
 	njCnkModDrawObject(&object_000F5EC0);
@@ -132,8 +134,142 @@ void __cdecl BossBigBogyDisp(ObjectMaster *a1)
     sub_613F20(*(int*)(v4 + 12));
 }
 
+DataPointer(NJS_VECTOR, stru_1A27FBC, 0x1A27FBC);
+void __cdecl FlyingDog(ObjectMaster *a1)
+{
+    EntityData1* v2 = a1->Data1.Entity; // edx
+
+    njPushMatrixEx();
+    njTranslate(0, stru_1A27FBC.x, stru_1A27FBC.y, stru_1A27FBC.z);
+    if (v2->Rotation.y != -16384)
+    {
+        njRotateY(0, v2->Rotation.y + 0x4000);
+    }
+    njCnkModDrawObject(&object_000CE3F8);
+    njPopMatrixEx();
+}
+
+static void __declspec(naked) FlyingDogHook()
+{
+    __asm
+    {
+        push eax // a1
+
+        // Call your __cdecl function here:
+        call FlyingDog
+
+        pop eax // a1
+        retn
+    }
+}
+
+void __cdecl HotShotDisp(ObjectMaster* a1)
+{
+    ObjectFunc(sub_5D0620, 0x5D0620);
+    sub_5D0620(a1);
+
+    sub_5D0620_Mod(a1);
+}
+
+FunctionPointer(void, sub_42E730, (NJS_OBJECT*), 0x42E730);
+void BossMissileDisp(ObjectMaster *a1)
+{
+    float* v1; // ebx
+    int v2; // ebp
+    float* v3; // eax
+    float* v4; // esi
+    float* v5; // eax
+    float* result; // eax
+
+    v2 = (int)a1->Data1.Entity;
+    njSetTexture((NJS_TEXLIST*)0x1133FF8);
+    njPushMatrixEx();
+    njTranslate(0, *(float*)(v2 + 20), *(float*)(v2 + 24), *(float*)(v2 + 28));
+    njTranslate(0, 0.0, *(float*)0x173D008, 0.0);
+    if (*(int*)(v2 + 12))
+    {
+        njRotateY(0, *(int*)(v2 + 12));
+    }
+    if (*(int*)(v2 + 16))
+    {
+        njRotateZ(0, *(int*)(v2 + 16));
+    }
+    if (*(int*)(v2 + 8))
+    {
+        njRotateX(0, *(int*)(v2 + 8));
+    }
+    njRotateY(0, 0x4000);
+    
+    sub_42E730((NJS_OBJECT*)0x113469C);
+    if (a1->Data1.Entity->Action == 1)
+    {
+        _nj_control_3d_flag_ |= 0x2400;
+        njCnkModDrawObject(&object_000DD3F4);
+        _nj_control_3d_flag_ &= 0xFFFFDBFF;
+    }
+    njPopMatrixEx();
+}
+
+void Biolizard_DarkEnergy_ModDisp(ObjectMaster* a1)
+{
+    if (a1->Data1.Entity->Action == 3)
+    {
+        NJS_VECTOR a2;
+        a2.x = a1->Data1.Entity->Position.x;
+        a2.z = a1->Data1.Entity->Position.z;
+        a2.y = a1->Data1.Entity->Position.y - 40.0;
+        float v17, v18, v30, v36, a3;
+        if (a2.y >= 10.2)
+        {
+            if (a2.y <= 0.0)
+            {
+                v18 = a2.y;
+                v30 = 40.0 - -a2.y;
+                v17 = v30 * a1->Data1.Entity->Scale.x;
+            }
+            else
+            {
+                v17 = 40.0 * a1->Data1.Entity->Scale.x;
+                v18 = a2.y;
+            }
+        }
+        else
+        {
+            v17 = 40.0 * a1->Data1.Entity->Scale.x;
+            v18 = (float)10.2;
+        }
+        njPushMatrixEx();
+        a3 = v18;
+        njTranslate(0, a2.x, a3, a2.z);
+        v36 = v17;
+        njScale(0, v36, 1.0, v36);
+        DrawEnemyShadow();
+        njPopMatrixEx();
+    }
+}
+ObjectFunc(Biolizard_DarkEnergyDisp, 0x00523070);
+void __cdecl Biolizard_DarkEnergyDisp_(ObjectMaster* a1)
+{
+    a1->DisplaySub = Biolizard_DarkEnergy_ModDisp;
+    Biolizard_DarkEnergyDisp(a1);
+}
+
+
 void Boss_Init()
 {
+    //biolizard darkenergy ball, hooks field_1C sub to set the displaysub that renders the ball
+    WriteData((int*)(0x0052374A - 4), (int)Biolizard_DarkEnergyDisp_);
+
+    WriteJump((void*)0x5D6AA0, BossMissileDisp);
+
+    //hotshot
+    WriteData((int*)(0x005C7322 - 4), (int)HotShotDisp);
+    WriteJump((void*)0x5CC110, nullsub_1);
+
+    //fdog
+    WriteCall((void*)0x005D43EA, FlyingDogHook);
+    WriteJump((void*)0x5D4410, nullsub_1);
+
 	//big foot
 	WriteData((int*)(0x005CC502 - 4), (int)sub_5D0620_Mod);
 	WriteJump((void*)0x5D0B30, nullsub_1);
