@@ -584,7 +584,7 @@ void __cdecl CarDispMod(ObjectMaster* a1)
 	//FUN_8c500e06(&a3, 15, 30);
 	int v3;
 	EntityData1* v1 = a1->Data1.Entity;
-	int index = (int)(a1->Data1.Entity->Scale.x + 0.1f);
+	int index = (int)(a1->Data1.Entity->Scale.y + 0.1f);
 	CarData* v2 = &stru_10D9810[index % 30];
 	if (!*(int*)0x1AEDCEC
 		|| (v3 = v1->Index, (unsigned __int8)v3 >= 0xAu) && ((unsigned __int8)v3 >= 0x14u || (FrameCountIngame & 1) == 0))
