@@ -7,6 +7,7 @@
 #include "data/Bunchin.nja"
 #include "njkm.h"
 #include "data/MeteorHerd.nja"
+#include "data/Block.nja"
 
 float FracInt;
 float njFraction(float a1)
@@ -375,25 +376,11 @@ NJS_CNK_MODEL attach_0019FBE4 = { vertex_0019FB78, poly_0019FB24, { 0 }, 21.2132
 
 NJS_OBJECT object_0019FBFC = { NJD_EVAL_UNIT_POS | NJD_EVAL_UNIT_ANG | NJD_EVAL_UNIT_SCL | NJD_EVAL_BREAK, &attach_0019FBE4, 0, 0, 0, 0, 0, 0, 1, 1, 1, NULL, NULL };
 
-void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
+FunctionPointer(int , sub_5B44E0,(float a1, float arg4, int arg8),0x5B44E0);
+void __cdecl FUN_8c500e06(float param_2, float param_3, Rotation* param_1)
 {
-	float fVar1;
-	int* puVar2;
-	Uint32 uVar3;
-	Uint32 uVar4;
-	float fVar5;
-	float* pfVar6;
-	Uint32* pfVar7;
-	Uint32* pfVar8;
-	Uint32 uVar9;
-	bool bVar10;
-	float local_a4;
-	float fStack160;
-	float local_9c;
+	sub_5B44E0(param_2, param_3, (int)param_1);
 	NJS_CNK_MODEL local_94;
-	float local_7c[12];
-	float local_4c[12];
-
 	param_2 = sqrtf(param_2 * param_2 + param_3 * param_3);
 	local_94.plist = attach_0019FBE4.plist;
 	local_94.center.x = attach_0019FBE4.center.x;
@@ -401,73 +388,159 @@ void FUN_8c500e06(Rotation* param_1, float param_2, float param_3)
 	local_94.r = param_2 * 2.0 + attach_0019FBE4.r;
 	local_94.center.z = attach_0019FBE4.center.z;
 	local_94.vlist = (Sint32*)&SomeBuffer;
+	njCnkModDrawModel((NJS_CNK_MODEL*)&local_94);
+	return;
+}
 
-	local_4c[0] = -param_3;
-	local_4c[1] = 3.5f;
-	local_4c[2] = -param_3;
+DataArray(char, dword_1DEFE24, 0x1DEFE24, 1);
+NJS_VECTOR stru_1195CD4 = {};
+void __cdecl TruckMod(float a1, float arg4, int arg8)
+{
+	float* v4; // ebx
+	double v5; // st6
+	float* v6; // eax
+	unsigned int i; // edi
+	float* v8; // edx
+	int result; // eax
+	int v10; // esi
+	float* v11; // ecx
+	int v12; // ebx
+	int v13; // edi
+	double v14; // st7
+	double v15; // st6
+	double v16; // st5
+	double v17; // st4
+	double v18; // st2
+	double v19; // rt1
+	double v20; // rt2
+	double v21; // st2
+	double v22; // st4
+	int v23; // eax
+	double v24; // st1
+	int v25; // eax
+	double v26; // st1
+	float* v27; // ecx
+	int v28; // edx
+	NJS_VECTOR a3[4]; // [esp+0h] [ebp-60h] BYREF
+	NJS_VECTOR a2[4]; // [esp+30h] [ebp-30h] BYREF
+	float v31; // [esp+64h] [ebp+4h]
+	float v32; // [esp+68h] [ebp+8h]
+	Float v33; // [esp+6Ch] [ebp+Ch]
+	Float v34; // [esp+6Ch] [ebp+Ch]
+	float v35; // [esp+6Ch] [ebp+Ch]
 
-	local_4c[3] = local_4c[0];
-	local_4c[4] = 3.5f;
-	local_4c[5] = param_3;
+	a3[2].x = a1;
+	a3[0].x = -a3[2].x;
+	a3[0].y = 30.0f;
+	a3[0].z = -arg4;
+	a3[1].y = 130.0f;
+	a3[1].z = arg4 + -900.0f;
+	a3[2].y = 30.0f;
+	a3[3].y = 130.0f;
+	a3[1].x = a3[0].x;
+	a3[2].z = a3[0].z;
+	a3[3].x = a3[2].x;
+	a3[3].z = a3[1].z;
 
-	local_4c[6] = param_2;
-	local_4c[7] = 3.5f;
-	local_4c[8] = local_4c[2];
-
-	local_4c[9] = local_4c[6];
-	local_4c[10] = 3.5f;
-	local_4c[11] = param_3;
-	
 	njPushUnitMatrix();
-	njRotateEx(param_1, 1);
-	//(*DAT_8c501004)(0, &local_4c, local_7c, 4);
-	for (int i = 0; i < 4; i++) //njCalcPoints
+	njRotateEx((Rotation*)arg8, 1);
+	for (i = 0; i < 4; ++i)
 	{
-		njCalcPoint((NJS_VECTOR*)(&local_4c[i * 3]), (NJS_VECTOR*)(&local_7c[i * 3]), _nj_current_matrix_ptr_);
+		njCalcVector(_nj_current_matrix_ptr_, &a2[i], &a3[i], 0);
 	}
 	njPopMatrixEx();
 
-	puVar2 = (int*)&modVec;
-	uVar9 = 0;
-	pfVar7 = (Uint32*)attach_0019FBE4.vlist;
-	uVar4 = 0;
-	*local_94.vlist = *attach_0019FBE4.vlist;
-	pfVar6 = (float*)(local_94.vlist + 1);
-	pfVar8 = pfVar7 + 2;
-	uVar3 = (Uint32)pfVar7[1] >> 0x10;
-	*pfVar6 = pfVar7[1];
-	fVar1 = 0.12f;
-	fVar5 = 70.0f;
-	while (true) {
-		bVar10 = uVar3 == 0;
-		uVar3 = uVar3 - 1;
-		if (bVar10) break;
-		pfVar7 = pfVar8 + 1;
-		pfVar8 = pfVar8 + 3;
-		if (*pfVar7 <= 0.0) {
-			fStack160 = fVar1 * (local_7c[uVar4 * 3] - *(float*)puVar2) + *(float*)puVar2 + fVar5;
-			local_a4 = fVar1 * (local_7c[uVar4 * 3 + 2] - *(float*)(puVar2 + 8)) + *(float*)(puVar2 + 8)
-				+ fVar5;
-			local_9c = *(float*)(puVar2 + 4);
-			uVar4 = uVar4 + 1;
+	njPushUnitMatrix();
+	njRotateY(0, ((Rotation*)arg8)->y);
+	stru_1195CD4 = { 0, -200, -100 };
+	njCalcVector(_nj_current_matrix_ptr_, &stru_1195CD4, &stru_1195CD4, 0);
+	njPopMatrixEx();
+
+	SomeBuffer = *attach_0019FBE4.vlist;
+	*(int*)dword_1DEFE24 = attach_0019FBE4.vlist[1];
+	v8 = (float*)(attach_0019FBE4.vlist + 2);
+	result = *(unsigned __int16*)&dword_1DEFE24[2];
+	v10 = 0;
+	v11 = (float*)0x1DEFE28;
+	v12 = *(unsigned __int16*)&dword_1DEFE24[2];
+	v13 = 0;
+	if (*(unsigned __int16*)&dword_1DEFE24[2])
+	{
+		v14 = stru_1195CD4.z;
+		v15 = stru_1195CD4.y;
+		v16 = stru_1195CD4.x;
+		v17 = 0.0;
+		v18 = 100.0f;
+		while (1)
+		{
+			v20 = v18;
+			v21 = v17;
+			v22 = v20;
+			--v12;
+			if (v21 >= v8[1])
+			{
+				v25 = v13;
+				v26 = a2[v13].x;
+				v13 = v13 + 1;
+				v35 = (v26 - v16) * 0.12f + v16 + v22;
+				v32 = (a2[v25].z - v14) * 0.12f + v14 + v22;
+				v31 = v15;
+			}
+			else
+			{
+				v23 = v10;
+				v24 = a2[v10].x;
+				v10 = v10 + 1;
+				v35 = v24;
+				v32 = a2[v23].z;
+				v31 = a2[v23].y;
+			}
+			*v11 = v35;
+			v27 = v11 + 1;
+			*v27 = v31;
+			result = v32;
+			*++v27 = v32;
+			v8 += 3;
+			v11 = v27 + 1;
+			v10 &= 3u;
+			v13 &= 3u;
+			if (!v12)
+			{
+				break;
+			}
+			v19 = v21;
+			v18 = v22;
+			v17 = v19;
 		}
-		else {
-			fStack160 = local_7c[uVar9 * 3];
-			local_a4 = local_7c[uVar9 * 3 + 2];
-			local_9c = local_7c[uVar9 * 3 + 1];
-			uVar9 = uVar9 + 1;
-		}
-		pfVar6[1] = fStack160;
-		uVar4 = uVar4 & 3;
-		pfVar6[2] = local_9c;
-		pfVar6 = pfVar6 + 3;
-		uVar9 = uVar9 & 3;
-		*pfVar6 = local_a4;
 	}
-	fVar5 = *pfVar8;
-	pfVar6[1] = fVar5;
-	njCnkModDrawModel(&local_94);
-	return;
+	v28 = *(int*)v8;
+	*(int*)v11 = v28;
+	while (v28 != 255)
+	{
+		;
+	}
+	NJS_CNK_MODEL local_94;
+	float r = sqrtf(a1 * a1 + arg4 * arg4);
+	local_94.plist = attach_0019FBE4.plist;
+	local_94.center.x = attach_0019FBE4.center.x;
+	local_94.center.y = attach_0019FBE4.center.y;
+	local_94.r = r * 2.0 + 300.0f;
+	local_94.center.z = attach_0019FBE4.center.z;
+	local_94.vlist = (Sint32*)&SomeBuffer;
+	njCnkModDrawModel((NJS_CNK_MODEL*)&local_94);
+}
+void __cdecl TruckDisp(ObjectMaster* a1)
+{
+	ObjectFunc(sub_5E7070, 0x5E7070);
+	sub_5E7070(a1);
+
+	float* v4 = (float*)a1->EntityData2;
+	float v82 = v4[54] + 10.0;
+	float v83 = a1->Data1.Entity->Position.y + v82 - 5.0 + v4[81];
+	njPushMatrixEx();
+	njTranslate(0, a1->Data1.Entity->Position.x, v83, a1->Data1.Entity->Position.z);
+	TruckMod(70, 60, (int)&a1->Data1.Entity->Rotation);
+	njPopMatrixEx();
 }
 
 #pragma pack(push, 8)
@@ -489,21 +562,91 @@ struct __declspec(align(4)) CarData
 };
 #pragma pack(pop)
 DataArray(CarData, stru_10D9810, 0x10D9810, 1);
-void __cdecl CarDispMod(ObjectMaster* param_1)
-{
-	Rotation a3 = { 0,0,0 };
-	FUN_8c500e06(&a3, 4, 3);
-}
 
-__declspec(naked) void CarDispModHook()
+bool sub_6BC520(NJS_VECTOR* p, float a1, float* a2)
 {
-	__asm {
-		call njTranslate_Ptr
-		push [esp+0x3C+4+8]
-		call CarDispMod
-		add esp, 4
-		ret
+	float v4; // [esp+0h] [ebp-10h]
+	NJS_VECTOR a2a; // [esp+4h] [ebp-Ch] BYREF
+
+	njCalcVector(_nj_current_matrix_ptr_, &a2a, p, 0);
+	v4 = -a2a.z;
+	*a2 = v4;
+	return -a1 <= v4;
+}
+ObjectFunc(sub_5E0430, 0x005E0430);
+void __cdecl CarDispMod(ObjectMaster* a1)
+{
+	a1->field_2C = 0;
+
+	sub_5E0430(a1);
+
+	int v27[3] = { 0,0,0 };
+	//FUN_8c500e06(&a3, 15, 30);
+	int v3;
+	EntityData1* v1 = a1->Data1.Entity;
+	int index = (int)(a1->Data1.Entity->Scale.x + 0.1f);
+	CarData* v2 = &stru_10D9810[index % 30];
+	if (!*(int*)0x1AEDCEC
+		|| (v3 = v1->Index, (unsigned __int8)v3 >= 0xAu) && ((unsigned __int8)v3 >= 0x14u || (FrameCountIngame & 1) == 0))
+	{
+		if (v1->NextAction >= 0 && v2)
+		{
+			float v22;
+			float v23 = v2->field_C->chunkmodel->center.z;
+			float a3 = v23 + 30.0;
+			if (sub_6BC520(&v1->Position, a3, &v22))
+			{
+				float v4 = v22;
+				if (v22 <= (double)*(float*)0x12D3864)
+				{
+					njPushMatrixEx();
+					a3 = *(float*)((int)a1->EntityData2 + 0x54);
+					if (v2->field_4 <= v4 || !v2->a4 || (v1->NextAction & 4) != 0)
+					{
+						
+						int v12 = (int)a1->EntityData2;
+						v27[0] = v1->Rotation.x + *(int*)((int)(a1->EntityData2) + 0x44);
+						v27[1] = v1->Rotation.y + *(int*)((int)(a1->EntityData2) + 0x48);
+						v27[2] = v1->Rotation.z + *(int*)((int)(a1->EntityData2) + 0x4c);
+						float v14 = v1->Position.y;
+						a3 = v14 + a3 + 1.0 + *(float*)(v12 + 104);
+						njTranslate(0, v1->Position.x, a3, v1->Position.z);
+						FUN_8c500e06(v2->a5[0], v2->a5[2], (Rotation*)v27);
+					}
+					else
+					{
+						if (v2->field_C)
+						{
+							v27[0] = v1->Rotation.x + *(int*)((int)(a1->EntityData2) + 0x44);
+							v27[1] = v1->Rotation.y + *(int*)((int)(a1->EntityData2) + 0x48);
+							v27[2] = v1->Rotation.z + *(int*)((int)(a1->EntityData2) + 0x4c);
+
+							UnknownData2* v6 = a1->EntityData2;
+							a3 = v1->Position.y + a3 + 1.0 + v6->some_vector.z;
+							njTranslate(0, v1->Position.x, a3, v1->Position.z);
+							FUN_8c500e06(v2->a5[0], v2->a5[2], (Rotation*)v27);
+						}
+
+					}
+					njPopMatrixEx();
+					return;
+				}
+			}
+		}
 	}
+}
+ObjectFunc(sub_5E25D0, 0x5E25D0);
+void __cdecl CarCrashDispMod(ObjectMaster* a1)
+{
+	sub_5E25D0(a1);
+
+	CarData* car = (CarData*)a1->Data2.Undefined;
+
+	njPushMatrixEx();
+	njTranslateEx(&a1->Data1.Entity->Position);
+	FUN_8c500e06(car->a5[0], car->a5[2], &a1->Data1.Entity->Rotation);
+	njPopMatrixEx();
+
 }
 
 void __cdecl GolemUDReel(NJS_CNK_MODEL *a1)
@@ -574,8 +717,29 @@ void __cdecl MeteorHerd_FireBall(ObjectMaster* a1)
 	sub_5C1370(a1);
 }
 
+void BlockDispMod()
+{
+	njCnkModDrawObject(&object_000BEC94);
+}
+
+void BlockDispModHook()
+{
+	__asm
+	{
+		call C_MTXConcatptr
+	}
+	BlockDispMod();
+}
+
 void Enemy_Init()
 {
+	//truck
+	WriteData((int*)(0x005E4CCB - 4), (int)TruckDisp);
+	WriteJump((void*)0x05E85B0, nullsub_1);
+
+	//cannons core vertical block
+	WriteCall((void*)0x004CFDFA, BlockDispModHook);
+
 	//generic pickupable displaysub
 	WriteCall((void*)0x006BC8CD, EnemyMTXConcatHook);
 
@@ -585,8 +749,15 @@ void Enemy_Init()
 	WriteData((int*)(0x005C12E2 - 4), (int)MeteorHerd_FireBall);
 	WriteJump((void*)0x5C5120, nullsub_1); //meteo big kill sa2b shadow
 
-	//WriteCall((void*)0x005E0749, CarDispMod);
-	//WriteJump((void*)0x005E0430, CarDispMod);
+	//car
+	//mission street cars
+	WriteCall((void*)0x005B588A, FUN_8c500e06);
+	WriteCall((void*)0x005B5944, FUN_8c500e06);
+	WriteCall((void*)0x005B7422, FUN_8c500e06);
+	WriteCall((void*)0x005B74DA, FUN_8c500e06);
+	WriteJump((void*)0x5E2930, nullsub_1); //city escape car crash 
+	WriteData((int*)(0x005DE62D -4), (int)CarDispMod); //city escape car render
+	WriteData((int*)(0x005E1501 -4), (int)CarCrashDispMod); //city escape car crash render
 
 	//eggbeetle
 	WriteData((int*)(0x00690DE3-4), (int)EggBeetleDisp);
