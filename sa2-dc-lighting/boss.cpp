@@ -10,9 +10,6 @@
 #include "event.h"
 void sub_5D0620_Mod(ObjectMaster* a1)
 {
-	ObjectFunc(sub_5D0620, 0x5D0620);
-	sub_5D0620(a1);
-
 	njControl3D_Add(0x2400);
 
 	njPushMatrixEx();
@@ -35,6 +32,14 @@ void sub_5D0620_Mod(ObjectMaster* a1)
 	njPopMatrixEx();
 
 	njControl3D_Remove(0x2400);
+}
+
+void __cdecl sub_5D0620_ModHook(ObjectMaster* a1)
+{
+    ObjectFunc(sub_5D0620, 0x5D0620);
+    sub_5D0620(a1);
+
+    sub_5D0620_Mod(a1);
 }
 
 VoidFunc(sub_612C80, 0x612C80);
@@ -163,12 +168,38 @@ static void __declspec(naked) FlyingDogHook()
     }
 }
 
+void sub_5CBB60_Mod(ObjectMaster* a1)
+{
+    njControl3D_Add(0x2400);
+
+    njPushMatrixEx();
+    njTranslateEx((NJS_VECTOR*)0x1A27D34);
+    njRotateY(0, a1->Data1.Entity->Rotation.y + 0x4000);
+    njCnkModDrawObject(&object_000F5C7C);
+    njPopMatrixEx();
+
+    njPushMatrixEx();
+    njTranslateEx((NJS_VECTOR*)(0x1A27E00));
+    njRotateY(0, a1->Data1.Entity->Rotation.y + 0x4000);
+    njCnkModDrawObject(&object_000F5EC0);
+    njPopMatrixEx();
+
+    njPushMatrixEx();
+    njTranslateEx((NJS_VECTOR*)(0x1A27DB8));
+    njRotateY(0, a1->Data1.Entity->Rotation.y + 0x4000);
+    njRotateY(0, 0x8000);
+    njCnkModDrawObject(&object_000F5EC0);
+    njPopMatrixEx();
+
+    njControl3D_Remove(0x2400);
+}
+
 void __cdecl HotShotDisp(ObjectMaster* a1)
 {
-    ObjectFunc(sub_5D0620, 0x5D0620);
-    sub_5D0620(a1);
+    ObjectFunc(sub_5CBB60, 0x5CBB60);
+    sub_5CBB60(a1);
 
-    sub_5D0620_Mod(a1);
+    sub_5CBB60_Mod(a1);
 }
 
 FunctionPointer(void, sub_42E730, (NJS_OBJECT*), 0x42E730);
@@ -271,7 +302,7 @@ void Boss_Init()
     WriteJump((void*)0x5D4410, nullsub_1);
 
 	//big foot
-	WriteData((int*)(0x005CC502 - 4), (int)sub_5D0620_Mod);
+	WriteData((int*)(0x005CC502 - 4), (int)sub_5D0620_ModHook);
 	WriteJump((void*)0x5D0B30, nullsub_1);
 
 	//big boom boo
