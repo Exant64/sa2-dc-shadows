@@ -435,7 +435,7 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     njControl3D_Add(0x2400);
     njPushMatrixEx();
     //spindash or rolling
-    if (animation == 11 || animation == 12)
+    if (v4 == 6)
     {
         njTranslate(0, a1->Position.x, a1->Position.y + 0.3f, a1->Position.z);
         njRotateY(0, 0x8000 - a1->Rotation.y);
@@ -491,7 +491,7 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     int charObjHack = (int)a3;
     njControl3D_Add(0x2400);
     njPushMatrixEx();
-    if (animation == 11 || animation == 12)
+    if (v4 == 6)
     {
         njTranslate(0, a1->Position.x, a1->Position.y + 0.3f, a1->Position.z);
         njRotateY(0, 0x8000 - a1->Rotation.y);
@@ -544,13 +544,22 @@ void __cdecl SonicShadowMod(ObjectMaster* a1)
 {
     Sonic_Display(a1);
 
+    int currentAnim = a1->Data2.Character->AnimInfo.Current;
+    if (a1->Data2.Character->AnimInfo.AnimationFrame != 2)
+    {
+        if ((a1->Data1.Entity->Status & Status_Ball) != 0
+            && a1->Data2.Character->CharID2 != Characters_MetalSonic
+            && ( *(uint8_t*)((int)a1->Data2.Character + 0x360) & 0x11) != 0)
+            currentAnim = 30;
+    }
+
     if (!a1->Data2.Character->CharID)
     {
-        SonicMod(a1->Data1.Entity, (SonicCharObj2*)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
+        SonicMod(a1->Data1.Entity, (SonicCharObj2*)a1->Data2.Character, currentAnim);
     }
     else
     {
-        ShadowMod(a1->Data1.Entity, (SonicCharObj2*)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
+        ShadowMod(a1->Data1.Entity, (SonicCharObj2*)a1->Data2.Character, currentAnim);
     }
 }
 
@@ -781,6 +790,69 @@ void __cdecl ChaosDisp(ObjectMaster* a1)
     //TikalMod(a1->Data1.Entity, (Uint32)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
 }
 
+void __cdecl ChaoWalkers(int a1, int a2, int a3)
+{
+    int v3; // edx
+    float* v4; // esi
+    float* v5; // eax
+    float* v6; // eax
+    float* v7; // eax
+    float* v8; // eax
+    float* v9; // eax
+    float* v10; // esi
+
+    CharObj2Base* obj2 = (CharObj2Base*)a3;
+    _nj_control_3d_flag_ |= 0x2400u;
+    v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
+    njPushMatrixEx();
+    //if (v3 == 248)
+    {
+        njTranslate(0, *(float*)(a3 + 536), *(float*)(a3 + 540), *(float*)(a3 + 544));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        if (obj2->CharID2 == Characters_ChaoWalker)
+            njCnkModDrawObject(&object_0000C380);
+        else
+            njCnkModDrawObject(&object_0000C380);
+        njPopMatrixEx();
+
+        njPushMatrixEx();
+        njTranslate(0, *(float*)(a3 + 512), *(float*)(a3 + 516), *(float*)(a3 + 520));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njCnkModDrawObject(&object_0000C4BC);
+        njPopMatrixEx();
+
+        njPushMatrixEx();
+        njTranslate(0, *(float*)(a3 + 524), *(float*)(a3 + 528), *(float*)(a3 + 532));
+        if (*(int*)(a2 + 12) != 0x8000)
+        {
+            njRotateY(0, 0x8000 - *(int*)(a2 + 12));
+        }
+        njCnkModDrawObject(&object_0000C4BC);
+    }
+    _nj_control_3d_flag_ &= ~0x2400u;
+    njPopMatrixEx();
+}
+
+void __cdecl ChaoWalkerDisp(ObjectMaster* a1)
+{
+    ChaoWalker_Display(a1);
+    ChaoWalkers(a1->Data2.Character->AnimInfo.Current, (int)a1->Data1.Entity, (Uint32)a1->Data2.Character);
+    //TikalMod(a1->Data1.Entity, (Uint32)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
+}
+
+void __cdecl DarkChaoWalkerDisp(ObjectMaster* a1)
+{
+    DarkChaoWalker_Display(a1);
+    ChaoWalkers(a1->Data2.Character->AnimInfo.Current, (int)a1->Data1.Entity, (Uint32)a1->Data2.Character);
+    //TikalMod(a1->Data1.Entity, (Uint32)a1->Data2.Character, a1->Data2.Character->AnimInfo.Current);
+}
+
 DataArray(NJS_VECTOR*, off_1DD92B0, 0x1DD92B0, 1);
 void __cdecl sub_61C6C0Mod(ObjectMaster* obj)
 {
@@ -934,6 +1006,18 @@ void Player_Init(const IniFile* config)
     {
         WriteData((int*)0x00728AD3, (int)TikalDisp);
         WriteData((int*)(0x00728ADE - 4), (int)nullsub_1);
+    }
+
+    if (config->getBool("Characters", "ChaoWalker", true))
+    {
+        WriteData((int*)0x00741268, (int)ChaoWalkerDisp);
+        WriteData((int*)(0x0074127A - 4), (int)nullsub_1);
+    }
+
+    if (config->getBool("Characters", "DarkChaoWalker", true))
+    {
+        WriteData((int*)0x00741448, (int)DarkChaoWalkerDisp);
+        WriteData((int*)(0x0074145A - 4), (int)nullsub_1);
     }
 
     if (config->getBool("Characters", "MechTails", true))

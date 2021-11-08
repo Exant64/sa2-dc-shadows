@@ -14,6 +14,123 @@ typedef struct NJS_MODIFIER_WORK {
 
 NJS_MODIFIER_WORK _nj_modifier_work;
 
+/*
+void __cdecl sub_42CF30(signed __int16* a1, int a2)
+{
+    signed __int16* v2; // esi
+    signed __int16 v3; // dx
+    int v4; // ebp
+    unsigned __int16 v5; // di
+    __int16 v6; // ax
+    int v7; // ebx
+    unsigned int v8; // ecx
+    int* v9; // esi
+    int v10; // edx
+    int v11; // edi
+    __int16 v12; // di
+    int v13; // [esp+Ch] [ebp-4Ch]
+    char v14; // [esp+10h] [ebp-48h]
+    char a1a; // [esp+5Ch] [ebp+4h]
+
+    v2 = a1;
+    v3 = *a1;
+    v4 = 0;
+    v5 = *a1;
+    v13 = 0;
+    *(int*)0x1A55840 = 0;
+    if (v5 != 255)
+    {
+        do
+        {
+            v6 = (unsigned __int8)v3;
+            ++v2;
+            if ((unsigned __int8)v3 >= 8u)
+            {
+                if ((unsigned __int8)v3 >= 0x10u)
+                {
+                    if ((unsigned __int8)v3 >= 0x40u)
+                    {
+                        v7 = (unsigned __int16)*v2;
+                        v8 = v2[1];
+                        v9 = (int*)(v2 + 2);
+                        if (v13 <= 0)
+                        {
+                            if (!(v8 >> 14))
+                            {
+                                v10 = v13;
+                            LABEL_19:
+                                if (v6 == 64)
+                                {
+                                    sub_42E570(v9, a2, v8);
+                                }
+                                else if ((unsigned int)(v6 - 65) <= 1)
+                                {
+                                    if ((a1a & 0x40) != 0)
+                                    {
+                                        goto LABEL_22;
+                                    }
+                                    if (v10)
+                                    {
+                                        if ((*(int*)0x19346DC & 2) == 0)
+                                        {
+                                            goto LABEL_27;
+                                        }
+                                    }
+                                    else if ((*(int*)0x19346DC & 2) != 0)
+                                    {
+                                    LABEL_22:
+                                        sub_42F1C0(v9, a2, v8);
+                                    }
+                                    else
+                                    {
+                                    LABEL_27:
+                                        sub_42E370(v9, a2, v8);
+                                    }
+                                }
+                                v4 = 0;
+                                v2 = (signed __int16*)v9 + v7 - 1;
+                                v13 = 0;
+                                //pTexSurface = 0;
+                                goto LABEL_30;
+                            }
+                            v13 = v8 >> 14;
+                            v2 = (signed __int16*)v9 + v7 - 1;
+                            v4 = 1;
+                            v14 = v12;
+                        }
+                        else
+                        {
+                            v10 = v13;
+                            v11 = v4++;
+                            if (v11 >= v13)
+                            {
+                                a1a = v14;
+                                goto LABEL_19;
+                            }
+                            v2 = (signed __int16*)v9 + v7 - 1;
+                        }
+                    }
+                    else
+                    {
+                        v2 += *v2 + 1;
+                    }
+                }
+                else
+                {
+                    ++v2;
+                }
+            }
+            else
+            {
+
+            }
+        LABEL_30:
+            v3 = *v2;
+            v5 = *v2;
+        } while (*v2 != 255);
+    }
+}
+*/
 extern void* njEndModifier(void*);
 PMODTRI njCnkModPolygon(Uint16* plist, NJS_CNK_MOD_BUF* buf, Uint16 val, PMODTRI sq)
 {
@@ -182,11 +299,14 @@ void _njCnkModDrawObject(NJS_OBJECT* obj)
         obj = obj->child;
     } while (obj);
 }
-void njCnkModDrawModel(NJS_CNK_MODEL* model)
+extern "C" 
 {
-    _njCnkModDrawModel(model);
-}
-void njCnkModDrawObject(NJS_OBJECT* object)
-{
-    _njCnkModDrawObject(object);
+    __declspec(dllexport) void njCnkModDrawModel(NJS_CNK_MODEL* model)
+    {
+        _njCnkModDrawModel(model);
+    }
+    __declspec(dllexport) void njCnkModDrawObject(NJS_OBJECT* object)
+    {
+        _njCnkModDrawObject(object);
+    }
 }

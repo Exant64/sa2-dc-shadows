@@ -464,9 +464,6 @@ void ChaoWorld_Init()
 	//queue horse, fixes shadow problem with it + fixes a vanilla problem (fruits get rendered after the horse => fruit gets drawn above horse tail even if behind it)
 	WriteCall((void*)0x0580DA4, HorseFixHook);
 
-	//attempt to fix something
-	WriteCall((void*)0x0054607D, AL_IsHitKindWithNumDisplay);
-
 	//tree, TODO make these use the ChaoXYZhooks
 	WriteJump((void*)0x5479C0, sub_5479C0);
 	WriteJump((void*)0x547840, sub_547840_Hook);
