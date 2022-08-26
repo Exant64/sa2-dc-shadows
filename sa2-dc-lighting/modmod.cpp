@@ -26,7 +26,7 @@ void __cdecl MODMOD_Disp(ObjectMaster* a1)
 		a1->Data1.Entity->Scale.y + 1.0f,
 		a1->Data1.Entity->Scale.z + 1.0f);
 
-	njCnkModDrawModel(MODMODmodels[a1->Data1.Entity->field_6]);
+	njCnkModDrawModel(MODMODmodels[a1->Data1.Entity->Timer]);
 
 	njPopMatrixEx();
 }

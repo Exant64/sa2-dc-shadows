@@ -184,7 +184,7 @@ int njCnkModVertex(NJS_MODIFIER_WORK* work)
         buf[i].x = vertex[0];
         buf[i].y = vertex[1];
         buf[i].z = vertex[2];
-        njCalcVector(_nj_current_matrix_ptr_, &buf[i], &buf[i], 0);
+        njCalcPoint(_nj_current_matrix_ptr_, &buf[i], &buf[i], 0);
         vertex += 3;
         num++;
     }

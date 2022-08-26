@@ -29,7 +29,7 @@ void __cdecl DoLighting_Simple(int a1)
 {
 	NJS_VECTOR loc;
 	loc = Lights[a1].direction;
-	njCalcPoint(&loc, &loc, _nj_current_matrix_ptr_);
+	njCalcVector(&loc, &loc, _nj_current_matrix_ptr_);
 	
 	Renderer__SetShaderConstantsF2(dword_1A557C0, 0, 200, (float*)&loc);
 	Renderer__SetShaderConstantsF(dword_1A557C0, 0, 204, &Lights[a1].intensity, 1);

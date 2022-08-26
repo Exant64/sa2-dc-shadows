@@ -446,14 +446,14 @@ void __cdecl TruckMod(float a1, float arg4, int arg8)
 	njRotateEx((Rotation*)arg8, 1);
 	for (i = 0; i < 4; ++i)
 	{
-		njCalcVector(_nj_current_matrix_ptr_, &a2[i], &a3[i], 0);
+		njCalcPoint(_nj_current_matrix_ptr_, &a2[i], &a3[i], 0);
 	}
 	njPopMatrixEx();
 
 	njPushUnitMatrix();
 	njRotateY(0, ((Rotation*)arg8)->y);
 	stru_1195CD4 = { 0, -200, -100 };
-	njCalcVector(_nj_current_matrix_ptr_, &stru_1195CD4, &stru_1195CD4, 0);
+	njCalcPoint(_nj_current_matrix_ptr_, &stru_1195CD4, &stru_1195CD4, 0);
 	njPopMatrixEx();
 
 	SomeBuffer = *attach_0019FBE4.vlist;
@@ -568,7 +568,7 @@ bool sub_6BC520(NJS_VECTOR* p, float a1, float* a2)
 	float v4; // [esp+0h] [ebp-10h]
 	NJS_VECTOR a2a; // [esp+4h] [ebp-Ch] BYREF
 
-	njCalcVector(_nj_current_matrix_ptr_, &a2a, p, 0);
+	njCalcPoint(_nj_current_matrix_ptr_, &a2a, p, 0);
 	v4 = -a2a.z;
 	*a2 = v4;
 	return -a1 <= v4;

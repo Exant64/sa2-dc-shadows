@@ -24,6 +24,43 @@ VoidFunc(AlphaTestEnable, 0x0042C0A0);
 
 extern "C"
 {
+
+	enum
+	{
+		GXRender,
+		EasyRender,
+		SimpleRender,
+		EasyMultiRender,
+		SimpleMultiRender
+	};
+	int DefaultRenderMode = SimpleRender;
+	int NinjaRenderMode = DefaultRenderMode;
+	IDirect3DVertexShader9* vertexBackup;
+	IDirect3DPixelShader9* pixelBackup;
+	void LightBegin() {
+#ifdef DCLIGHTING
+		device->GetVertexShader(&vertexBackup);
+		device->GetPixelShader(&pixelBackup);
+
+		if (NinjaRenderMode > 0)
+		{
+			device->SetVertexShader(ninjaLVertexShader);
+			device->SetPixelShader(ninjaLPixelShader);
+			float flag = 0;
+			if (NinjaRenderMode == EasyRender)
+				flag = 1;
+			device->SetVertexShaderConstantF(216, &flag, 1);
+			//DoLighting_Simple(LastLightID);
+		}
+#endif
+	}
+	void LightEnd() {
+#ifdef DCLIGHTING
+		device->SetVertexShader(vertexBackup);
+		device->SetPixelShader(pixelBackup);
+#endif
+	}
+
 	bool ShadowDebug = false;
 
 	int CheapShadow = 0x50;
@@ -81,9 +118,7 @@ extern "C"
 		UpdateObjects();
 	}
 
-	void DrawVolumeDisplaySub()
-	{
-		VoidFunc(UpdateObjects, 0x00470010);
+	void PrepareDrawVolume() {
 		IDirect3DVertexShader9* backupV;
 		IDirect3DPixelShader9* backupP;
 		device->GetVertexShader(&backupV);
@@ -106,7 +141,7 @@ extern "C"
 		DWORD alphablend;
 		DWORD zenable;
 		DWORD srcblend, dstblend;
-		DWORD alphatest,alphafunc;
+		DWORD alphatest, alphafunc;
 		DWORD colorwriteenable;
 		device->GetRenderState(D3DRS_ALPHATESTENABLE, &alphatest);
 		device->GetRenderState(D3DRS_ZENABLE, &zenable);
@@ -199,6 +234,11 @@ extern "C"
 		//state->Apply();
 		device->SetVertexShader(backupV);
 		device->SetPixelShader(backupP);
+	}
+
+	void DrawVolumeDisplaySub()
+	{
+		PrepareDrawVolume();
 		sub_470D20(ObjectLists[0]);
 	}
 
@@ -236,7 +276,9 @@ extern "C"
 	void __cdecl DrawSA2BModelControlHook(int arg0, unsigned int a2)
 	{
 		Control3DShadowBegin();
+		LightBegin();
 		GXCallDisplayList(arg0,a2);
+		LightEnd();
 		Control3DShadowEnd();
 	}
 
@@ -250,45 +292,19 @@ extern "C"
 	}
 	FunctionPointer(void, sub_42CAD0, (signed __int16* a1, int a2), 0x42CAD0);
 
-	enum
-	{
-		GXRender,
-		EasyRender,
-		SimpleRender,
-		EasyMultiRender,
-		SimpleMultiRender
-	};
-	int NinjaRenderMode = 0;
+
 	void __cdecl sub_42CAD0Hook(signed __int16* a1, int a2)
 	{
 		Control3DShadowBegin();
 
 #ifdef DCLIGHTING
-
-
-		IDirect3DVertexShader9* vertexBackup;
-		IDirect3DPixelShader9* pixelBackup;
-
-		device->GetVertexShader(&vertexBackup);
-		device->GetPixelShader(&pixelBackup);
-
-		if (NinjaRenderMode > 0)
-		{
-			device->SetVertexShader(ninjaLVertexShader);
-			device->SetPixelShader(ninjaLPixelShader);
-			float flag = 0;
-			if (NinjaRenderMode == EasyRender)
-				flag = 1;
-			device->SetVertexShaderConstantF(216, &flag, 1);
-			//DoLighting_Simple(LastLightID);
-		}
+		LightBegin();
 #endif
 
 		sub_42CAD0(a1, a2);
 
 #ifdef DCLIGHTING
-		device->SetVertexShader(vertexBackup);
-		device->SetPixelShader(pixelBackup);
+		LightEnd();
 #endif
 
 		Control3DShadowEnd();
@@ -298,7 +314,7 @@ extern "C"
 	{
 		NinjaRenderMode = EasyRender;
 		njCnkEasyDrawModel(model);
-		NinjaRenderMode = GXRender;
+		NinjaRenderMode = DefaultRenderMode;
 	}
 
 	static void __declspec(naked) njCnkEasyDrawModelHook()
@@ -320,7 +336,20 @@ extern "C"
 		FunctionPointer(void, sub_42E660, (NJS_CNK_MODEL*), 0x42E660);
 		NinjaRenderMode = SimpleRender;
 		sub_42E660(model);
-		NinjaRenderMode = GXRender;
+		NinjaRenderMode = DefaultRenderMode;
+	}
+	static void __declspec(naked) njCnkSimpleDrawModelHook()
+	{
+		__asm
+		{
+			push eax // a1
+
+			// Call your __cdecl function here:
+			call _njCnkSimpleDrawModel
+
+			pop eax // a1
+			retn
+		}
 	}
 
 	void __cdecl sub_690670(NJS_OBJECT* result)
@@ -426,6 +455,16 @@ extern "C"
 		}
 	}
 
+	const int jmp0047012C = 0x0047012C;
+	static void __declspec(naked) Disp20Hook()
+	{
+		__asm
+		{
+			call PrepareDrawVolume
+			jmp jmp0047012C
+		}
+	}
+
 	__declspec(dllexport) void Init(const char* path, const HelperFunctions& helperFunctions)
 	{
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
@@ -438,10 +477,15 @@ extern "C"
 		WriteCall((void*)0x006D9FFE, njCnkEasyDrawModelHook);
 		WriteCall((void*)0x006DA08A, njCnkEasyDrawModelHook);
 
+		//landtable
+		WriteCall((void*)0x0047C462, njCnkEasyDrawModelHook);
+		WriteCall((void*)0x0047C612, njCnkEasyDrawModelHook);
+		WriteCall((void*)0x0047C454, njCnkSimpleDrawModelHook);
+		WriteCall((void*)0x0047C604, njCnkSimpleDrawModelHook);
 		//e_ai
-		WriteCall((void*)0x004FF92A, sub_780870Hook);
+		//WriteCall((void*)0x004FF92A, sub_780870Hook);
 
-		WriteCall((void*)0x0050137E, sub_780870Hook); //beetle
+		//WriteCall((void*)0x0050137E, sub_780870Hook); //beetle
 
 		//WriteData((int*)0x00501395, (int)_njCnkSimpleDrawModel);
 		//WriteData((int*)0x004FF935, (int)_njCnkSimpleDrawModel);
@@ -493,8 +537,13 @@ extern "C"
 		WriteCall((void*)0x00470513, DrawVolumeInit);
 		WriteCall((void*)0x004708B0, DrawVolumeInit);
 			
-		WriteCall((void*)0x004700D9, DrawVolumeDisplaySub);
-	
+		if (config->getBool("DCShadows", "DCChar", true)) {
+			WriteJump((void*)0x00470124, Disp20Hook);
+		}
+		else {
+			WriteCall((void*)0x004700D9, DrawVolumeDisplaySub);
+		}
+
 		//appropriately set stencil mode for each draw function by checking control3d
 		WriteCall((void*)0x0056DF13, DrawModelFlagsHook);
 		WriteCall((void*)0x0056DF29, sub_56D7C0Hook);

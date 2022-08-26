@@ -58,8 +58,8 @@ void njCnkEasyVertexVN(NJS_CNK_EASY_VERTEX& vertex)
         
         NJS_VECTOR vert = *vec;
         NJS_VECTOR norm = vec[1];
-        njCalcVector(_nj_current_matrix_ptr_, &vert, &vert, 0);
-        njCalcPoint(&norm, &norm, _nj_current_matrix_ptr_);
+        //njCalcVector(_nj_current_matrix_ptr_, &vert, &vert, 0);
+        //njCalcPoint(&norm, &norm, _nj_current_matrix_ptr_);
 
         float dot = njInnerProduct(&vertex.lx, &norm.x) * vertex.diff;
         if (dot < 0) dot = 0;
