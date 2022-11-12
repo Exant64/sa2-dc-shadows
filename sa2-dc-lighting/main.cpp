@@ -455,13 +455,41 @@ extern "C"
 		}
 	}
 
+	DataPointer(int, dword_1A5A3D0, 0x1A5A3D0);
+	DataPointer(Uint8, byte_174AFFD, 0x174AFFD);
+	const int jmp0047012E = 0x0047012E;
 	const int jmp0047012C = 0x0047012C;
+	const int loc_470195 = 0x00470195;
 	static void __declspec(naked) Disp20Hook()
 	{
 		__asm
 		{
 			call PrepareDrawVolume
+			
+			mov  al, byte ptr [0x174AFFD]
+
+			xor ebx, ebx
+			cmp  dword_1A5A3D0, ebx
+
 			jmp jmp0047012C
+			//jz   loc_470195
+			//jmp jmp0047012E
+		}
+	}
+
+	bool DCCompat;
+
+	int FrameCounter = 0;
+	__declspec(dllexport) void OnFrame() {
+		if (!DCCompat) return;
+
+		FrameCounter++;
+		if (FrameCounter == 2) { 
+			//THIS IS TO DELAY INIT, SO THAT WE CAN OVERWRITE THE DC COMPAT THING
+			WriteData<char>((char*)0x71706E, 0x14);
+			WriteData<char>((char*)0x741079, 0x14);
+			WriteData<char>((char*)0x740E19, 0x14);
+			WriteData<char>((char*)0x728CC9, 0x14);
 		}
 	}
 
@@ -537,12 +565,8 @@ extern "C"
 		WriteCall((void*)0x00470513, DrawVolumeInit);
 		WriteCall((void*)0x004708B0, DrawVolumeInit);
 			
-		if (config->getBool("DCShadows", "DCChar", true)) {
-			WriteJump((void*)0x00470124, Disp20Hook);
-		}
-		else {
-			WriteCall((void*)0x004700D9, DrawVolumeDisplaySub);
-		}
+		DCCompat = config->getBool("DCShadows", "DCChar", true);
+		WriteCall((void*)0x004700D9, DrawVolumeDisplaySub);
 
 		//appropriately set stencil mode for each draw function by checking control3d
 		WriteCall((void*)0x0056DF13, DrawModelFlagsHook);

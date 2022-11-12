@@ -237,7 +237,7 @@ static void __declspec(naked) sub_547840_Hook()
 		retn
 	}
 }
-void __cdecl DrawChaoWorldShadow()
+extern "C" __declspec(dllexport) void __cdecl DrawChaoWorldShadow()
 {
 	njCnkModDrawModel(object_8D9813C7ECAA3378948.chunkmodel);
 }
