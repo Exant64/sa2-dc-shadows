@@ -1,7 +1,8 @@
 ﻿#include "pch.h"
+#include <string>
 #include "SA2ModLoader.h"
 #include <d3d9.h>
-#include <string>
+
 #include <d3dx9.h>
 #include "njCnkModifier.h"
 #include "njkm.h"
@@ -12,11 +13,14 @@
 #include "enemy.h"
 #include "chao.h"
 
-#include <string>
 #include "IniFile.hpp"
 #include "player.h"
 #include "boss.h"
 #include "event.h"
+
+#include "magic.h"
+
+using namespace Magic::RenderCore;
 
 VoidFunc(Opaque, 0x0042C030);
 VoidFunc(AlphaTestDisable, 0x0042C170);
@@ -105,16 +109,28 @@ extern "C"
 	{
 		VoidFunc(UpdateObjects, 0x00470010);
 		ModelTransFlag = RenderFlag_Opaque|RenderFlag_Trans;
-		device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+//#define MAGIC
+#if 0
+#ifndef MAGIC
 		device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
+		device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
 		device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
 		device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
 		device->SetRenderState(D3DRS_STENCILREF, 0);
 		device->SetRenderState(D3DRS_STENCILMASK, 0xffffffff);
 		device->SetRenderState(D3DRS_STENCILWRITEMASK, 0xffffffff);
-		device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
-		//VoidFunc(CollisionLoop, 0x00486190);
-		//CollisionLoop();
+#else
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_TEST_ENABLE, TRUE);
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_TEST_FUNC, RenderDevice::CMP_ALWAYS);
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_TEST_PASS, RenderDevice::STENCILOP_REPLACE);		
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_TEST_FAIL, RenderDevice::STENCILOP_KEEP);
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_TEST_ZFAIL, RenderDevice::STENCILOP_KEEP);
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_REF, 0);
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_MASK, 0xFFFFFFFF);
+		g_pRenderDevice->__vftable->SetRenderState(g_pRenderDevice, RenderDevice::RS_STENCIL_WRITE_MASK, 0xFFFFFFFF);
+#endif	
+#endif
+		
 		UpdateObjects();
 	}
 
@@ -403,11 +419,11 @@ extern "C"
 	}
 	void __cdecl MeteorHerdLand(NJS_CNK_MODEL* a1)
 	{
-		njControl3D_Backup();
-		njControl3D_Add(0x2400);
+		SaveControl3D();
+		OnControl3D(0x2400);
 		njCnkEasyDrawModel(a1);
-		//njControl3D_Remove(0x2400);
-		njControl3D_Restore();
+		//OffControl3D(0x2400);
+		LoadControl3D();
 	}
 
 	static void __declspec(naked) MeteorHerdLandHook()
@@ -436,10 +452,10 @@ extern "C"
 
 	void __cdecl sub_42B5A0Shad(SA2B_Model* a1)
 	{
-		njControl3D_Backup();
-		njControl3D_Add(0x2400);
+		SaveControl3D();
+		OnControl3D(0x2400);
 		sub_42B5A0(a1);
-		njControl3D_Restore();
+		LoadControl3D();
 	}
 	static void __declspec(naked) sub_42B5A0Hook()
 	{

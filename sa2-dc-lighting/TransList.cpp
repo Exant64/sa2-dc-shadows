@@ -39,8 +39,8 @@ void TransList_Add(NJS_CNK_MODEL* model)
 		entry.ConstantMaterial = *(NJS_ARGB*)0x025EFFD0;
 	}
 	entry.cnk_blend_mode = *(int*)0x025F0264;
-	entry.blendmode = RenferInfo_->Thing;
-	entry.texlist = RenferInfo_->CurrentTexlist;
+	entry.blendmode = pRenderInfo->attrflags;
+	entry.texlist = pRenderInfo->CurrentTexlist;
 	entry.model = model;
 	entry.EasyFlag = *(int*)0x01A55844;
 	memcpy(entry.matrix, _nj_current_matrix_ptr_, 0x30);
@@ -92,7 +92,7 @@ void TransList_Render()
 		}
 		*(int*)0x025F0264 = entry.cnk_blend_mode;
 
-		RenferInfo_->Thing = entry.blendmode;
+		pRenderInfo->attrflags = entry.blendmode;
 		if (entry.EasyFlag)
 			njCnkEasyDrawModel(entry.model);
 		else

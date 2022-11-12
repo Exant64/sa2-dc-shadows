@@ -1,16 +1,15 @@
 #include "pch.h"
 #include "njCnkModifier.h"
-#include "data/BigFoot.nja"
-#include "data/BoomBoo.nja"
-#include "data/FlyingDog.nja"
-#include "data/BossMissile.nja"
 #include "enemy.h"
 #include "TransList.h"
 #include "chao.h"
 #include "event.h"
+
+#include "data/bossmodel.h"
+
 void sub_5D0620_Mod(ObjectMaster* a1)
 {
-	njControl3D_Add(0x2400);
+	OnControl3D(0x2400);
 
 	njPushMatrixEx();
 	njTranslateEx((NJS_VECTOR*)0x1A27E84);
@@ -31,7 +30,7 @@ void sub_5D0620_Mod(ObjectMaster* a1)
 	njCnkModDrawObject(&object_000F5EC0);
 	njPopMatrixEx();
 
-	njControl3D_Remove(0x2400);
+	OffControl3D(0x2400);
 }
 
 void __cdecl sub_5D0620_ModHook(ObjectMaster* a1)
@@ -70,8 +69,8 @@ void __cdecl BossBigBogyDisp(ObjectMaster *a1)
         sub_612C80();
         njTranslateV(0, &v5->Position);
         njScaleV_(&v5->Scale);
-        v3 = njSin(v7[34]) * 0.8999999761581421 + 55.0;
-        njTranslate(0, 0.0, v3, 0.0);
+        v3 = njSin(v7[34]) * 0.9f + 55;
+        njTranslate(0, 0, v3, 0);
         njRotateZ(0, v5->Rotation.z);
         njRotateX(0, v5->Rotation.x);
         njRotateY(0, v5->Rotation.y);
@@ -89,8 +88,8 @@ void __cdecl BossBigBogyDisp(ObjectMaster *a1)
         if ((v5->Status & 0x400) != 0)
         {
             SaveConstantAttr();
-            njControl3D_Backup();
-            njControl3D_Add(0x820);
+            SaveControl3D();
+            OnControl3D(0x820);
             OnConstantAttr(0, 0x800);
             SetMaterial(*((float*)v7 + 46), 0.0, 0.0, 0.0);
             v6 = 1;
@@ -109,7 +108,7 @@ void __cdecl BossBigBogyDisp(ObjectMaster *a1)
         {
             SetMaterial(0.0, 0.0, 0.0, 0.0);
             LoadConstantAttr();
-            njControl3D_Restore();
+            LoadControl3D();
         }
         njPopMatrixEx();
         *(int*)0x01A55834 = 0;
@@ -170,7 +169,7 @@ static void __declspec(naked) FlyingDogHook()
 
 void sub_5CBB60_Mod(ObjectMaster* a1)
 {
-    njControl3D_Add(0x2400);
+    OnControl3D(0x2400);
 
     njPushMatrixEx();
     njTranslateEx((NJS_VECTOR*)0x1A27D34);
@@ -191,7 +190,7 @@ void sub_5CBB60_Mod(ObjectMaster* a1)
     njCnkModDrawObject(&object_000F5EC0);
     njPopMatrixEx();
 
-    njControl3D_Remove(0x2400);
+    OffControl3D(0x2400);
 }
 
 void __cdecl HotShotDisp(ObjectMaster* a1)
@@ -205,12 +204,7 @@ void __cdecl HotShotDisp(ObjectMaster* a1)
 FunctionPointer(void, sub_42E730, (NJS_OBJECT*), 0x42E730);
 void BossMissileDisp(ObjectMaster *a1)
 {
-    float* v1; // ebx
     int v2; // ebp
-    float* v3; // eax
-    float* v4; // esi
-    float* v5; // eax
-    float* result; // eax
 
     v2 = (int)a1->Data1.Entity;
     njSetTexture((NJS_TEXLIST*)0x1133FF8);
@@ -248,32 +242,32 @@ void Biolizard_DarkEnergy_ModDisp(ObjectMaster* a1)
         NJS_VECTOR a2;
         a2.x = a1->Data1.Entity->Position.x;
         a2.z = a1->Data1.Entity->Position.z;
-        a2.y = a1->Data1.Entity->Position.y - 40.0;
+        a2.y = a1->Data1.Entity->Position.y - 40;
         float v17, v18, v30, v36, a3;
-        if (a2.y >= 10.2)
+        if (a2.y >= 10.2f)
         {
-            if (a2.y <= 0.0)
+            if (a2.y <= 0)
             {
                 v18 = a2.y;
-                v30 = 40.0 - -a2.y;
+                v30 = 40 - -a2.y;
                 v17 = v30 * a1->Data1.Entity->Scale.x;
             }
             else
             {
-                v17 = 40.0 * a1->Data1.Entity->Scale.x;
+                v17 = 40 * a1->Data1.Entity->Scale.x;
                 v18 = a2.y;
             }
         }
         else
         {
-            v17 = 40.0 * a1->Data1.Entity->Scale.x;
-            v18 = (float)10.2;
+            v17 = 40 * a1->Data1.Entity->Scale.x;
+            v18 = 10.2f;
         }
         njPushMatrixEx();
         a3 = v18;
         njTranslate(0, a2.x, a3, a2.z);
         v36 = v17;
-        njScale(0, v36, 1.0, v36);
+        njScale(0, v36, 1, v36);
         DrawEnemyShadow();
         njPopMatrixEx();
     }

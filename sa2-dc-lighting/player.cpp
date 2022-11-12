@@ -3,17 +3,7 @@
 #include "njCnkModifier.h"
 #include "IniFile.hpp"
 
-#include "data/PlayerShadow.h"
-#include "data/TailsModifier.h"
-#include "data/Knuckles.nja"
-#include "data/Rouge.nja"
-#include "data/SonicModifier.nja"
-#include "data/ShadowModifier.nja"
-#include "data/EggWalker.nja"
-#include "data/TailsWalker.nja"
-#include "data/KartShadows.nja"
-#include "data/TikalChaos.nja"
-#include "data/Board.nja"
+#include "data/playermodel.h"
 
 #pragma region Tails
 void sub_750C40(int animation, EntityData1* a2, TailsCharObj2* a3)
@@ -60,7 +50,7 @@ void sub_750C40(int animation, EntityData1* a2, TailsCharObj2* a3)
 		{
 			njRotateY(0, 0x8000 - a2->Rotation.y);
 		}
-		njScale(0, 2.6, 1, 1);
+		njScale(0, 2.6f, 1, 1);
 		njCnkModDrawModel(object_000D8124.chunkmodel);
 		njPopMatrixEx();
 
@@ -115,29 +105,6 @@ static void __declspec(naked) TailsModHook()
 void __cdecl sub_730100(int a1, int a2, int a3)
 {
     int v3; // edx
-    float* v4; // esi
-    float* v5; // eax
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // eax
-    float* v11; // eax
-    float* v12; // eax
-    float* v13; // eax
-    float* v14; // esi
-    float v15; // [esp+1Ch] [ebp-30h] BYREF
-    float v16; // [esp+20h] [ebp-2Ch]
-    float v17; // [esp+24h] [ebp-28h]
-    float v18; // [esp+28h] [ebp-24h]
-    float v19; // [esp+2Ch] [ebp-20h]
-    float v20; // [esp+30h] [ebp-1Ch]
-    float v21; // [esp+34h] [ebp-18h]
-    float v22; // [esp+38h] [ebp-14h]
-    float v23; // [esp+3Ch] [ebp-10h]
-    float v24; // [esp+40h] [ebp-Ch]
-    float v25; // [esp+44h] [ebp-8h]
-    float v26; // [esp+48h] [ebp-4h]
 
     _nj_control_3d_flag_ |= 0x2400u;
     v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
@@ -216,32 +183,7 @@ static void __declspec(naked) KnucklesMod()
 #pragma region Rouge
 void __cdecl sub_7311E0(int a1, EntityData1* a2, int a3)
 {
-    float* v3; // eax
     int v4; // edx
-    float* v5; // esi
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // eax
-    float* v11; // eax
-    float* v12; // eax
-    float* v13; // eax
-    float* v14; // eax
-    float* v15; // eax
-    float* v16; // esi
-    float v17; // [esp+1Ch] [ebp-30h] BYREF
-    float v18; // [esp+20h] [ebp-2Ch]
-    float v19; // [esp+24h] [ebp-28h]
-    float v20; // [esp+28h] [ebp-24h]
-    float v21; // [esp+2Ch] [ebp-20h]
-    float v22; // [esp+30h] [ebp-1Ch]
-    float v23; // [esp+34h] [ebp-18h]
-    float v24; // [esp+38h] [ebp-14h]
-    float v25; // [esp+3Ch] [ebp-10h]
-    float v26; // [esp+40h] [ebp-Ch]
-    float v27; // [esp+44h] [ebp-8h]
-    float v28; // [esp+48h] [ebp-4h]
 
     _nj_control_3d_flag_ |= 0x2400u;
     v4 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
@@ -264,7 +206,7 @@ void __cdecl sub_7311E0(int a1, EntityData1* a2, int a3)
         }
         njTranslate(0, 0.0, -2.0, 0.0);
         
-        njScale(0, 1.2, 1, 0.7f);
+        njScale(0, 1.2f, 1, 0.7f);
         njCnkModDrawModel(object_000D8124.chunkmodel);
         njPopMatrixEx();
 
@@ -276,7 +218,7 @@ void __cdecl sub_7311E0(int a1, EntityData1* a2, int a3)
         }
         njTranslate(0, 0.0, -2.0, 0.0);
         
-        njScale(0, 1.2, 1, 0.7f);
+        njScale(0, 1.2f, 1, 0.7f);
         njCnkModDrawModel(object_000D8124.chunkmodel); njPopMatrixEx();
 
         njPushMatrixEx();
@@ -322,35 +264,10 @@ static void __declspec(naked) RougeMod()
 #pragma endregion
 
 #pragma region Eggman
-#include "data/Eggman.nja"
+
 void sub_73F1A0(int a1, EntityData1* a2, int a3)
 {
     int v3; // edx
-    float* v4; // esi
-    float* v5; // eax
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // eax
-    float* v11; // eax
-    float* v12; // eax
-    float* v13; // eax
-    float* v14; // eax
-    float* v15; // eax
-    float* v16; // esi
-    float v17; // [esp+1Ch] [ebp-30h] BYREF
-    float v18; // [esp+20h] [ebp-2Ch]
-    float v19; // [esp+24h] [ebp-28h]
-    float v20; // [esp+28h] [ebp-24h]
-    float v21; // [esp+2Ch] [ebp-20h]
-    float v22; // [esp+30h] [ebp-1Ch]
-    float v23; // [esp+34h] [ebp-18h]
-    float v24; // [esp+38h] [ebp-14h]
-    float v25; // [esp+3Ch] [ebp-10h]
-    float v26; // [esp+40h] [ebp-Ch]
-    float v27; // [esp+44h] [ebp-8h]
-    float v28; // [esp+48h] [ebp-4h]
 
     _nj_control_3d_flag_ |= 0x2400u;
     v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
@@ -378,7 +295,7 @@ void sub_73F1A0(int a1, EntityData1* a2, int a3)
 
         njPushMatrixEx();
         njTranslate(0, *(float*)(a3 + 500), *(float*)(a3 + 504), *(float*)(a3 + 508));
-        njTranslate(0, 0.0, -2.0, 0.0);
+        njTranslate(0, 0.0, -2.0f, 0.0);
         if (a2->Rotation.y != 0x8000)
         {
             njRotateY(0, 0x8000 - a2->Rotation.y);
@@ -393,7 +310,7 @@ void sub_73F1A0(int a1, EntityData1* a2, int a3)
         {
             njRotateY(0, 0x8000 - a2->Rotation.y);
         }
-        njScale(0, 2.2, 1.0, 0.7f);
+        njScale(0, 2.2f, 1.0, 0.7f);
         njCnkModDrawModel(object_000D8124.chunkmodel);
         njPopMatrixEx();
 
@@ -403,7 +320,7 @@ void sub_73F1A0(int a1, EntityData1* a2, int a3)
         {
             njRotateY(0, 0x8000 - a2->Rotation.y);
         }
-        njScale(0, 2.2, 1, 0.7f);
+        njScale(0, 2.2f, 1, 0.7f);
         njCnkModDrawModel(object_000D8124.chunkmodel);
     }
     _nj_control_3d_flag_ &= 0xFFFFDBFF;
@@ -432,7 +349,7 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 {
     int v4 = a3->base.AnimInfo.Animations[animation].ModelNum;
     int charObjHack = (int)a3;
-    njControl3D_Add(0x2400);
+    OnControl3D(0x2400);
     njPushMatrixEx();
     //spindash or rolling
     if (v4 == 6)
@@ -483,13 +400,13 @@ void SonicMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     }
 
     njPopMatrixEx();
-    njControl3D_Remove(0x2400);
+    OffControl3D(0x2400);
 }
 void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
 {
     int v4 = a3->base.AnimInfo.Animations[animation].ModelNum;
     int charObjHack = (int)a3;
-    njControl3D_Add(0x2400);
+    OnControl3D(0x2400);
     njPushMatrixEx();
     if (v4 == 6)
     {
@@ -537,7 +454,7 @@ void ShadowMod(EntityData1* a1, SonicCharObj2* a3, int animation)
     }
 
     njPopMatrixEx();
-    njControl3D_Remove(0x2400);
+    OffControl3D(0x2400);
 }
 
 void __cdecl SonicShadowMod(ObjectMaster* a1)
@@ -545,7 +462,7 @@ void __cdecl SonicShadowMod(ObjectMaster* a1)
     Sonic_Display(a1);
 
     int currentAnim = a1->Data2.Character->AnimInfo.Current;
-    if (a1->Data2.Character->AnimInfo.AnimationFrame != 2)
+    if (a1->Data2.Character->AnimInfo.mtnmode != 2)
     {
         if ((a1->Data1.Entity->Status & Status_Ball) != 0
             && a1->Data2.Character->CharID2 != Characters_MetalSonic
@@ -566,13 +483,6 @@ void __cdecl SonicShadowMod(ObjectMaster* a1)
 void __cdecl sub_745310(int a1, EntityData1* a2, MechEggmanCharObj2* a3)
 {
     int v3; // edx
-    float* v4; // esi
-    float* v5; // eax
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // esi
 
     _nj_control_3d_flag_ |= 0x2400u;
     v3 = a3->base.AnimInfo.Animations[a1].ModelNum;
@@ -628,13 +538,7 @@ static void __declspec(naked) EggWalkerMod()
 void __cdecl sub_748AF0(int a1, EntityData1* a2, int a3)
 {
     int v3; // edx
-    float* v4; // esi
-    float* v5; // eax
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // esi
+
     CharObj2Base* obj2 = (CharObj2Base*)a3;
     _nj_control_3d_flag_ |= 0x2400u;
     v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
@@ -693,30 +597,7 @@ static void __declspec(naked) TailsWalker()
 void __cdecl TikalChaos(int a1, int a2, int a3)
 {
     int v3; // edx
-    float* v4; // esi
-    float* v5; // eax
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // eax
-    float* v11; // eax
-    float* v12; // eax
-    float* v13; // eax
-    float* v14; // esi
-    float v15; // [esp+1Ch] [ebp-30h] BYREF
-    float v16; // [esp+20h] [ebp-2Ch]
-    float v17; // [esp+24h] [ebp-28h]
-    float v18; // [esp+28h] [ebp-24h]
-    float v19; // [esp+2Ch] [ebp-20h]
-    float v20; // [esp+30h] [ebp-1Ch]
-    float v21; // [esp+34h] [ebp-18h]
-    float v22; // [esp+38h] [ebp-14h]
-    float v23; // [esp+3Ch] [ebp-10h]
-    float v24; // [esp+40h] [ebp-Ch]
-    float v25; // [esp+44h] [ebp-8h]
-    float v26; // [esp+48h] [ebp-4h]
-
+    
     _nj_control_3d_flag_ |= 0x2400u;
     v3 = *(__int16*)(*(int*)(a3 + 408) + 16 * a1 + 2);
     njPushMatrixEx();
@@ -793,13 +674,6 @@ void __cdecl ChaosDisp(ObjectMaster* a1)
 void __cdecl ChaoWalkers(int a1, int a2, int a3)
 {
     int v3; // edx
-    float* v4; // esi
-    float* v5; // eax
-    float* v6; // eax
-    float* v7; // eax
-    float* v8; // eax
-    float* v9; // eax
-    float* v10; // esi
 
     CharObj2Base* obj2 = (CharObj2Base*)a3;
     _nj_control_3d_flag_ |= 0x2400u;

@@ -141,28 +141,8 @@ void njCnkEasyPlist(short* a1, long a2, NJS_CNK_EASY_BUF* a3)
     unsigned int v7; // r0
     int v8; // r8
     __int16 v9; // t1
-    int result; // r0
-    int v11; // r4
-    __int16 v12; // r9
-    __int16* v13; // r5
-    int v14; // r0
-    int v15; // r2
-    float v16; // s15
     unsigned int v17; // r1
     unsigned int* v18; // r1
-    int v19; // r1
-    int v20; // r0
-    bool v21; // zf
-    int v22; // r2
-    char v23; // r1
-    float v24; // s15
-    int v25; // r1
-    int v26; // r0
-    bool v27; // zf
-    float v29; // [sp+24h] [bp-4Ch] BYREF
-    float v30; // [sp+28h] [bp-48h]
-    float v31; // [sp+2Ch] [bp-44h]
-    float v32; // [sp+30h] [bp-40h]
 
     while (1)
     {
@@ -217,12 +197,7 @@ void njCnkEasyPlist(short* a1, long a2, NJS_CNK_EASY_BUF* a3)
 
 int _njCnkEasyDrawModel(NJS_CNK_MODEL* a1)
 {
-    int v1; // r4
-    __int16* v2; // r6
-    int v3; // r5
-    int v4; // r0
-    unsigned int v5; // r4
-    __int16* v6; // r0
+    unsigned int v5 = 0; // r4
 
     if (!a1)
         return 0;

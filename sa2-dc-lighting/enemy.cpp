@@ -1,13 +1,11 @@
 ﻿#include "pch.h"
 #include "d3d.h"
 #include "njCnkModifier.h"
-#include "data/Shouko.nja"
 #include <math.h>
 #include "TransList.h"
-#include "data/Bunchin.nja"
 #include "njkm.h"
-#include "data/MeteorHerd.nja"
-#include "data/Block.nja"
+
+#include "data/enemymodel.h"
 
 float FracInt;
 float njFraction(float a1)
@@ -15,18 +13,18 @@ float njFraction(float a1)
 	return modff(a1, &FracInt);
 }
 
-void EnemyModifier(EntityData1* data1, EnemyField38* data2)
+void EnemyModifier(EntityData1* data1, EnemyData* data2)
 {
-	float fr14 = data2->fEC;
-	float fr15 = fr14 * data2->field_F0;
-	njControl3D_Add(0x2400);
+	float fr14 = data2->shadow_scl;
+	float fr15 = fr14 * data2->shadow_scl_ratio;
+	OnControl3D(0x2400);
 	njPushMatrixEx();
 	njTranslate(0, data1->Position.x, data1->Position.y, data1->Position.z);
 	njRotateY(0, data1->Rotation.y);
 	njScale(0, fr14, 1, fr15);
 	njCnkModDrawObject(&object_000D8124);
 	njPopMatrixEx();
-	njControl3D_Remove(0x2400);
+	OffControl3D(0x2400);
 }
 
 void DrawEnemyShadow()
@@ -47,8 +45,8 @@ void EnemyMTXConcatHook()
 void __cdecl BeetleModifier(ObjectMaster* a1)
 {
 	njPopMatrixEx();
-	EnemyField38* enemyData = (EnemyField38*)a1->EntityData2;
-	if (njFraction(a1->Data1.Entity->Scale.x) == 0 && enemyData->fEC > 0)
+	EnemyData* enemyData = (EnemyData*)a1->EntityData2;
+	if (njFraction(a1->Data1.Entity->Scale.x) == 0 && enemyData->shadow_scl > 0)
 		EnemyModifier(a1->Data1.Entity, enemyData);
 	//DoLighting(*(char*)0x01DE4400);
 }
@@ -68,10 +66,6 @@ __declspec(naked) void BeetleModifierHook()
 void __cdecl sub_4F9DA0(ObjectMaster* a1)
 {
 	EntityData1* v1; // ebp
-	float* v2; // ebx
-	float* v3; // eax
-	float* v4; // esi
-	float* v5; // eax
 	signed int v6; // ebp
 
 	v1 = a1->Data1.Entity;
@@ -118,10 +112,10 @@ ObjectFunc(sub_6DC900, 0x6DC900);
 void BunchinDraw(ObjectMaster *a1)
 {
 	sub_6DC900(a1);
-	EnemyField38* enemy = (EnemyField38*)a1->EntityData2;
+	EnemyData* enemy = (EnemyData*)a1->EntityData2;
 	
 	//decompiled from dc
-	float fr14 = enemy->f0 * 0.5f;
+	float fr14 = enemy->velo.x * 0.5f;
 
 	if (fr14 > 100.0f)
 		fr14 = 100.0f;
@@ -135,7 +129,7 @@ void BunchinDraw(ObjectMaster *a1)
 
 	if (a1->Data1.Entity->Rotation.z & 0x1000)
 	{
-		njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y + fr14 + -102.5, a1->Data1.Entity->Position.z);
+		njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y + fr14 + -102.5f, a1->Data1.Entity->Position.z);
 		njRotateY(0, a1->Data1.Entity->Rotation.y);
 		fr3 = a1->Data1.Entity->Scale.z + 1;
 		fr6 = fr3*fr13;
@@ -143,7 +137,7 @@ void BunchinDraw(ObjectMaster *a1)
 	}
 	else
 	{
-		njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y + fr14 + -2.5, a1->Data1.Entity->Position.z);
+		njTranslate(0, a1->Data1.Entity->Position.x, a1->Data1.Entity->Position.y + fr14 + -2.5f, a1->Data1.Entity->Position.z);
 		njRotateY(0, a1->Data1.Entity->Rotation.y);
 		fr3 = a1->Data1.Entity->Scale.z + 1;
 		fr6 = fr3 * fr13;
@@ -172,7 +166,7 @@ void __cdecl MinimalMod(int a1)
 	sub_48A2D0(a1);
 	njPushMatrixEx();
 	njTranslate(0, 0, 2, 0);
-	njScale(0, 1.2,0.5,1.8);
+	njScale(0, 1.2f,0.5f,1.8f);
 	njCnkModDrawModel(object_000D8124.chunkmodel);
 	njPopMatrixEx();
 }
@@ -230,28 +224,15 @@ static void __declspec(naked) sub_6D3B40Hook()
 
 void __cdecl IronBallDisp(ObjectMaster* a1)
 {
-	float* v1; // eax
 	EntityData1* v2; // esi
-	float* v3; // edi
-	Float* v4; // eax
-	float* v5; // eax
-	float* v6; // edi
-	float* v7; // eax
-	float* v8; // edi
-	float* v9; // eax
-	float* v10; // eax
-	float* v11; // edi
-	float* v12; // ebx
 	int v13; // ecx
-	float* result; // eax
 	float a3; // [esp+1Ch] [ebp-34h]
 	float a2; // [esp+1Ch] [ebp-34h]
 	float v17; // [esp+1Ch] [ebp-34h]
-	float v18[12]; // [esp+20h] [ebp-30h] BYREF
 	
 	v2 = a1->Data1.Entity;
 	njPushMatrixEx();
-	a3 = v2->Position.y + 10.0;
+	a3 = v2->Position.y + 10;
 	njTranslate(0, v2->Position.x, a3, v2->Position.z);
 	if (v2->Rotation.y)
 	{
@@ -262,13 +243,13 @@ void __cdecl IronBallDisp(ObjectMaster* a1)
 	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3EA4C);
 
 	njPushMatrixEx();
-	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 5.0);
-	njScale(0, v2->Scale.x + 1.0, 1, 1);
+	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 5);
+	njScale(0, v2->Scale.x + 1, 1, 1);
 	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3E49C);
 	njPopMatrixEx();
 
 	njPushMatrixEx();
-	a2 = (v2->Scale.x + 1.0) * 20.0;
+	a2 = (v2->Scale.x + 1) * 20;
 	njTranslate(0, a2, 0.0, 0.0);
 	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 10);
 	v13 = (int)a1->EntityData2;
@@ -281,12 +262,12 @@ void __cdecl IronBallDisp(ObjectMaster* a1)
 	njPopMatrixEx();
 
 	njPushMatrixEx();
-	njScale(0, -(v2->Scale.x + 1.0), 1, 1);
+	njScale(0, -(v2->Scale.x + 1), 1, 1);
 	njCnkEasyDrawModel((NJS_CNK_MODEL*)0xB3E49C);
 	njPopMatrixEx();
 
-	v17 = -((v2->Scale.x + 1.0) * 20.0);
-	njTranslate(0, v17, 0.0, 0.0);
+	v17 = -((v2->Scale.x + 1) * 20);
+	njTranslate(0, v17, 0, 0);
 	sub_6D3B40((NJS_VECTOR*)0xB3E4EC, 10);
 	v13 = (int)a1->EntityData2;
 	if (*(int*)v13)
@@ -355,7 +336,7 @@ void __cdecl EggBeetleDisp(ObjectMaster* a1)
 	float v26 = off_C42148->r;
 	off_C42148->r = v26 * 1.2f;
 	njTranslate(0, 0, *(float*)0xC430AC, 0);
-	njScale(0, 1, 1.2, 1);
+	njScale(0, 1, 1.2f, 1);
 	if ((unsigned __int16)*off_C42148->vlist == 34)
 	{
 		sub_693AC0(a1->Data1.Entity->Rotation.z, a1->Data1.Entity->Rotation.x, (int)off_C42148->vlist);
@@ -368,13 +349,6 @@ void __cdecl EggBeetleDisp(ObjectMaster* a1)
 
 float DAT_8c500ff4 = 3.5f;
 NJS_VECTOR modVec = { 0,-200,0 };
-Sint32 vertex_0019FB78[] = { 0x190022, 0x80000, 0xC1700000u, 0xC1700000u, 0xC1700000u, 0xC1700000u, 0xC1700000u, 0x41700000, 0xC1700000u, 0x41700000, 0xC1700000u, 0xC1700000u, 0x41700000, 0x41700000, 0x41700000, 0xC1700000u, 0xC1700000u, 0x41700000, 0xC1700000u, 0x41700000, 0x41700000, 0x41700000, 0xC1700000u, 0x41700000, 0x41700000, 0x41700000, 0xFF, 0x0 };
-
-Sint16 poly_0019FB24[] = { 0x38, 0x25, 0xC, 0x0, 0x1, 0x2, 0x1, 0x3, 0x2, 0x1, 0x5, 0x3, 0x5, 0x7, 0x3, 0x5, 0x4, 0x7, 0x4, 0x6, 0x7, 0x4, 0x0, 0x6, 0x0, 0x2, 0x6, 0x4, 0x5, 0x0, 0x5, 0x1, 0x0, 0x2, 0x3, 0x6, 0x3, 0x7, 0x6, 0xFF };
-
-NJS_CNK_MODEL attach_0019FBE4 = { vertex_0019FB78, poly_0019FB24, { 0 }, 21.2132f };
-
-NJS_OBJECT object_0019FBFC = { NJD_EVAL_UNIT_POS | NJD_EVAL_UNIT_ANG | NJD_EVAL_UNIT_SCL | NJD_EVAL_BREAK, &attach_0019FBE4, 0, 0, 0, 0, 0, 0, 1, 1, 1, NULL, NULL };
 
 FunctionPointer(int , sub_5B44E0,(float a1, float arg4, int arg8),0x5B44E0);
 void __cdecl FUN_8c500e06(float param_2, float param_3, Rotation* param_1)
@@ -385,7 +359,7 @@ void __cdecl FUN_8c500e06(float param_2, float param_3, Rotation* param_1)
 	local_94.plist = attach_0019FBE4.plist;
 	local_94.center.x = attach_0019FBE4.center.x;
 	local_94.center.y = attach_0019FBE4.center.y;
-	local_94.r = param_2 * 2.0 + attach_0019FBE4.r;
+	local_94.r = param_2 * 2 + attach_0019FBE4.r;
 	local_94.center.z = attach_0019FBE4.center.z;
 	local_94.vlist = (Sint32*)&SomeBuffer;
 	njCnkModDrawModel((NJS_CNK_MODEL*)&local_94);
@@ -396,37 +370,31 @@ DataArray(char, dword_1DEFE24, 0x1DEFE24, 1);
 NJS_VECTOR stru_1195CD4 = {};
 void __cdecl TruckMod(float a1, float arg4, int arg8)
 {
-	float* v4; // ebx
-	double v5; // st6
-	float* v6; // eax
 	unsigned int i; // edi
 	float* v8; // edx
-	int result; // eax
 	int v10; // esi
 	float* v11; // ecx
 	int v12; // ebx
 	int v13; // edi
-	double v14; // st7
-	double v15; // st6
-	double v16; // st5
-	double v17; // st4
-	double v18; // st2
-	double v19; // rt1
-	double v20; // rt2
-	double v21; // st2
-	double v22; // st4
+	float v14; // st7
+	float v15; // st6
+	float v16; // st5
+	float v17; // st4
+	float v18; // st2
+	float v19; // rt1
+	float v20; // rt2
+	float v21; // st2
+	float v22; // st4
 	int v23; // eax
-	double v24; // st1
+	float v24; // st1
 	int v25; // eax
-	double v26; // st1
+	float v26; // st1
 	float* v27; // ecx
 	int v28; // edx
 	NJS_VECTOR a3[4]; // [esp+0h] [ebp-60h] BYREF
 	NJS_VECTOR a2[4]; // [esp+30h] [ebp-30h] BYREF
 	float v31; // [esp+64h] [ebp+4h]
 	float v32; // [esp+68h] [ebp+8h]
-	Float v33; // [esp+6Ch] [ebp+Ch]
-	Float v34; // [esp+6Ch] [ebp+Ch]
 	float v35; // [esp+6Ch] [ebp+Ch]
 
 	a3[2].x = a1;
@@ -459,7 +427,6 @@ void __cdecl TruckMod(float a1, float arg4, int arg8)
 	SomeBuffer = *attach_0019FBE4.vlist;
 	*(int*)dword_1DEFE24 = attach_0019FBE4.vlist[1];
 	v8 = (float*)(attach_0019FBE4.vlist + 2);
-	result = *(unsigned __int16*)&dword_1DEFE24[2];
 	v10 = 0;
 	v11 = (float*)0x1DEFE28;
 	v12 = *(unsigned __int16*)&dword_1DEFE24[2];
@@ -498,7 +465,6 @@ void __cdecl TruckMod(float a1, float arg4, int arg8)
 			*v11 = v35;
 			v27 = v11 + 1;
 			*v27 = v31;
-			result = v32;
 			*++v27 = v32;
 			v8 += 3;
 			v11 = v27 + 1;
@@ -524,7 +490,7 @@ void __cdecl TruckMod(float a1, float arg4, int arg8)
 	local_94.plist = attach_0019FBE4.plist;
 	local_94.center.x = attach_0019FBE4.center.x;
 	local_94.center.y = attach_0019FBE4.center.y;
-	local_94.r = r * 2.0 + 300.0f;
+	local_94.r = r * 2 + 300.0f;
 	local_94.center.z = attach_0019FBE4.center.z;
 	local_94.vlist = (Sint32*)&SomeBuffer;
 	njCnkModDrawModel((NJS_CNK_MODEL*)&local_94);
@@ -535,8 +501,8 @@ void __cdecl TruckDisp(ObjectMaster* a1)
 	sub_5E7070(a1);
 
 	float* v4 = (float*)a1->EntityData2;
-	float v82 = v4[54] + 10.0;
-	float v83 = a1->Data1.Entity->Position.y + v82 - 5.0 + v4[81];
+	float v82 = v4[54] + 10;
+	float v83 = a1->Data1.Entity->Position.y + v82 - 5 + v4[81];
 	njPushMatrixEx();
 	njTranslate(0, a1->Data1.Entity->Position.x, v83, a1->Data1.Entity->Position.z);
 	TruckMod(70, 60, (int)&a1->Data1.Entity->Rotation);
@@ -593,11 +559,11 @@ void __cdecl CarDispMod(ObjectMaster* a1)
 		{
 			float v22;
 			float v23 = v2->field_C->chunkmodel->center.z;
-			float a3 = v23 + 30.0;
+			float a3 = v23 + 30;
 			if (sub_6BC520(&v1->Position, a3, &v22))
 			{
 				float v4 = v22;
-				if (v22 <= (double)*(float*)0x12D3864)
+				if (v22 <= *(float*)0x12D3864)
 				{
 					njPushMatrixEx();
 					a3 = *(float*)((int)a1->EntityData2 + 0x54);
@@ -609,7 +575,7 @@ void __cdecl CarDispMod(ObjectMaster* a1)
 						v27[1] = v1->Rotation.y + *(int*)((int)(a1->EntityData2) + 0x48);
 						v27[2] = v1->Rotation.z + *(int*)((int)(a1->EntityData2) + 0x4c);
 						float v14 = v1->Position.y;
-						a3 = v14 + a3 + 1.0 + *(float*)(v12 + 104);
+						a3 = v14 + a3 + 1 + *(float*)(v12 + 104);
 						njTranslate(0, v1->Position.x, a3, v1->Position.z);
 						FUN_8c500e06(v2->a5[0], v2->a5[2], (Rotation*)v27);
 					}
@@ -622,7 +588,7 @@ void __cdecl CarDispMod(ObjectMaster* a1)
 							v27[2] = v1->Rotation.z + *(int*)((int)(a1->EntityData2) + 0x4c);
 
 							UnknownData2* v6 = a1->EntityData2;
-							a3 = v1->Position.y + a3 + 1.0 + v6->some_vector.z;
+							a3 = v1->Position.y + a3 + 1 + v6->some_vector.z;
 							njTranslate(0, v1->Position.x, a3, v1->Position.z);
 							FUN_8c500e06(v2->a5[0], v2->a5[2], (Rotation*)v27);
 						}

@@ -69,6 +69,15 @@
     <ClInclude Include="event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="data\playermodel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="data\bossmodel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="data\enemymodel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

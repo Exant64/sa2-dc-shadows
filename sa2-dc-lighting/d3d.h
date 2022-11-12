@@ -1,19 +1,14 @@
 #pragma once
 #include "SA2ModLoader.h"
 #include <d3d9.h>
+#include "magic.h"
+
 struct  Renderer
 {
 	void* vtable;
 	char field_4[52];
 	IDirect3DDevice9* pointerToDevice;
 	char field_3C[70];
-};
-struct Light
-{
-	NJS_VECTOR direction;
-	float intensity;
-	float ambient;
-	NJS_VECTOR color;
 };
 
 #pragma pack(push, 8)

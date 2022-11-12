@@ -20,9 +20,6 @@ IDirect3DPixelShader9* ninjaPixelShader;
 IDirect3DVertexShader9* ninjaLVertexShader;
 IDirect3DPixelShader9* ninjaLPixelShader;
 
-//uhhhh this mod was originally restoring dc lighting (but i couldnt figure out specular) 
-
-DataArray(Light, Lights, 0x01DE4280, 12);
 ThiscallFunctionPointer(void, Renderer__SetShaderConstantsF, (void* a1, int a2, int a3, const float* a4, signed int a5), 0x00866E80);
 ThiscallFunctionPointer(void, Renderer__SetShaderConstantsF2, (void* a1, int a2, int a3, float* a4), 0x00866E30);
 void __cdecl DoLighting_Simple(int a1)

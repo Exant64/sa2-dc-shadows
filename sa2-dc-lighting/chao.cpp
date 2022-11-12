@@ -55,39 +55,10 @@ struct __declspec(align(4)) ALO_GrowTreeExecutor_Data
 DataArray(int, dword_12E8AEC, 0x12E8AEC, 11);
 void __cdecl sub_5479C0(ALO_GrowTreeExecutor_Data* a1)
 {
-	float* v1; // ebx
-	float* v2; // esi
-	float* v3; // eax
-	float* v4; // esi
 	int v5; // edx
-	float* v6; // esi
-	unsigned int v7; // ebp
-	float* v8; // eax
-	float* v9; // eax
-	float* v10; // esi
-	float* v11; // eax
-	float* v12; // esi
-	float* v13; // eax
-	float* v14; // esi
-	float* v15; // eax
-	float* v16; // ebx
-	float v17; // [esp+1Ch] [ebp-3Ch]
 	float v18; // [esp+1Ch] [ebp-3Ch]
-	double v19; // [esp+1Ch] [ebp-3Ch]
-	float v20; // [esp+20h] [ebp-38h]
-	float v21; // [esp+24h] [ebp-34h]
-	float v22; // [esp+28h] [ebp-30h]
-	float v23; // [esp+2Ch] [ebp-2Ch]
-	float v24; // [esp+30h] [ebp-28h]
-	float v25; // [esp+34h] [ebp-24h]
-	float v26; // [esp+38h] [ebp-20h]
-	float v27; // [esp+3Ch] [ebp-1Ch]
-	float v28; // [esp+40h] [ebp-18h]
-	float v29; // [esp+44h] [ebp-14h]
-	float v30; // [esp+48h] [ebp-10h]
-	float v31; // [esp+4Ch] [ebp-Ch]
+	float v19; // [esp+1Ch] [ebp-3Ch]
 	float v32; // [esp+50h] [ebp-8h]
-	float v33; // [esp+54h] [ebp-4h]
 	int a1a; // [esp+5Ch] [ebp+4h]
 	//njSetTexture(^)
 	njPushMatrixEx();
@@ -133,17 +104,17 @@ void __cdecl sub_5479C0(ALO_GrowTreeExecutor_Data* a1)
 		{
 			njRotateY(_nj_current_matrix_ptr_, a1->entityData.Rotation.y + 0x2000);
 		}
-		njTranslate(_nj_current_matrix_ptr_, 0.0, 20.0, 0.0);
+		njTranslate(_nj_current_matrix_ptr_, 0, 20, 0);
 
 		v5 = a1->LeafRotAng;
 		v18 = a1->LeafWidth;
 		a1a = a1->LeafRotAng;
 		njPushMatrixEx();
 		{
-			v19 = v18 * 0.1500000059604645;
-			v32 = njSin(dword_12E8AEC[0] + v5) * v19 + 7.699999809265137;
+			v19 = v18 * 0.15f;
+			v32 = njSin(dword_12E8AEC[0] + v5) * v19 + 7.7f;
 			njScale(0, 3.0f, 2.0f, v32);
-			njTranslate(_nj_current_matrix_ptr_, 0.0, 0.0, 0.85000002);
+			njTranslate(_nj_current_matrix_ptr_, 0, 0, 0.85f);
 			njCnkModDrawModel(object_8D9813C7ECAA3378948.chunkmodel);
 		}
 		njPopMatrixEx();
@@ -152,9 +123,9 @@ void __cdecl sub_5479C0(ALO_GrowTreeExecutor_Data* a1)
 
 		njPushMatrixEx();
 		{
-			v32 = njSin(a1a + dword_12E8AEC[1]) * v19 + 7.300000190734863;
+			v32 = njSin(a1a + dword_12E8AEC[1]) * v19 + 7.3f;
 			njScale(0, 3.0f, 2.0f, v32);
-			njTranslate(_nj_current_matrix_ptr_, 0.0, 0.0, 0.85000002);
+			njTranslate(_nj_current_matrix_ptr_, 0, 0, 0.85f);
 			njCnkModDrawModel(object_8D9813C7ECAA3378948.chunkmodel);
 		}
 		njPopMatrixEx();
@@ -163,9 +134,9 @@ void __cdecl sub_5479C0(ALO_GrowTreeExecutor_Data* a1)
 
 		njPushMatrixEx();
 		{
-			v32 = njSin(dword_12E8AEC[2] + a1a) * v19 + 7.800000190734863;
+			v32 = njSin(dword_12E8AEC[2] + a1a) * v19 + 7.8f;
 			njScale(0, 4.0f, 2.0f, v32);
-			njTranslate(_nj_current_matrix_ptr_, 0.0, 0.0, 0.85000002);
+			njTranslate(_nj_current_matrix_ptr_, 0, 0, 0.85f);
 			njCnkModDrawModel(object_8D9813C7ECAA3378948.chunkmodel);
 		}
 		njPopMatrixEx();
@@ -174,9 +145,9 @@ void __cdecl sub_5479C0(ALO_GrowTreeExecutor_Data* a1)
 
 		njPushMatrixEx();
 		{
-			v32 = njSin(dword_12E8AEC[3] + a1a) * v19 + 7.099999904632568;
+			v32 = njSin(dword_12E8AEC[3] + a1a) * v19 + 7.1f;
 			njScale(0, 4.0f, 2.0f, v32);
-			njTranslate(_nj_current_matrix_ptr_, 0.0, 0.0, 0.85000002);
+			njTranslate(_nj_current_matrix_ptr_, 0, 0, 0.85f);
 			njCnkModDrawModel(object_8D9813C7ECAA3378948.chunkmodel);
 		}
 		njPopMatrixEx();
@@ -219,7 +190,7 @@ void __cdecl sub_547840(ALO_GrowTreeExecutor_Data* a1)
 	njPushMatrixEx();
 	{
 		njScale(0, 3, 2, 3);
-		njTranslate(_nj_current_matrix_ptr_, 0.0, 0.0, 0.85000002);
+		njTranslate(_nj_current_matrix_ptr_, 0, 0, 0.85f);
 		njCnkModDrawModel(object_8D9813C7ECAA3378948.chunkmodel);
 	}
 	njPopMatrixEx();
@@ -379,28 +350,8 @@ void __cdecl ALO_ChaosDriveExecutor_Display_(ObjectMaster* a1)
 	ALO_ChaosDriveExecutor_Display(a1);
 
 	EntityData1* v1; // ebp
-	double v2; // st7
-	float* v3; // ebx
-	float* v4; // eax
-	float* v5; // esi
+	float v2; // st7
 	double v6; // st7
-	int v7; // edx
-	float* v8; // eax
-	float* v9; // esi
-	int v10; // eax
-	float* v13; // ebx
-	float v14; // [esp+1Ch] [ebp-30h] BYREF
-	float v15; // [esp+20h] [ebp-2Ch]
-	float v16; // [esp+24h] [ebp-28h]
-	float v17; // [esp+28h] [ebp-24h]
-	float v18; // [esp+2Ch] [ebp-20h]
-	float v19; // [esp+30h] [ebp-1Ch]
-	float v20; // [esp+34h] [ebp-18h]
-	float v21; // [esp+38h] [ebp-14h]
-	float v22; // [esp+3Ch] [ebp-10h]
-	float v23; // [esp+40h] [ebp-Ch]
-	float v24; // [esp+44h] [ebp-8h]
-	float v25; // [esp+48h] [ebp-4h]
 	float a1b; // [esp+50h] [ebp+4h]
 	float a1c; // [esp+50h] [ebp+4h]
 	float a1a; // [esp+50h] [ebp+4h]
@@ -408,11 +359,11 @@ void __cdecl ALO_ChaosDriveExecutor_Display_(ObjectMaster* a1)
 	v1 = a1->Data1.Entity;
 	if ((v1->Status & 0x8000u) == 0)
 	{
-		v2 = 0.0;
+		v2 = 0.0f;
 	}
 	else
 	{
-		v2 = 0.69999999;
+		v2 = 0.7f;
 	}
 
 	njSetTexture((NJS_TEXLIST*)0x01717DAC);

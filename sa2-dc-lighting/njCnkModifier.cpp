@@ -268,7 +268,7 @@ int _njCnkModDrawModel(NJS_CNK_MODEL* model)
 
 void _njCnkModDrawObject(NJS_OBJECT* obj)
 {
-    Uint32 clip;
+    Uint32 clip = 0;
     do
     {
         Uint32 eval = obj->evalflags;

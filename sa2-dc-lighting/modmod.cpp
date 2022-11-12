@@ -4,11 +4,6 @@
 DataArray(NJS_CNK_MODEL*, MODMODmodels, 0x00B4D830, 3);
 void __cdecl MODMOD_Disp(ObjectMaster* a1)
 {
-	float* v1; // ebx
-	Data1Ptr v2; // esi
-	float* v3; // edi
-	float v4[12]; // [esp+18h] [ebp-30h] BYREF
-
 	njPushMatrixEx();
 	njTranslate(0, a1->Data1.Entity->Position.x,
 		a1->Data1.Entity->Position.y,
