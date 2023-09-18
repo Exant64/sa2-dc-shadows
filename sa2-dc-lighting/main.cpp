@@ -533,33 +533,37 @@ extern "C"
 
 		//WriteData((int*)0x00501395, (int)_njCnkSimpleDrawModel);
 		//WriteData((int*)0x004FF935, (int)_njCnkSimpleDrawModel);
-		
+
 #endif
 		//special objects that have a SetCOLShadow (battle shadow) call, make sure to enable the original ninja modifier shadow flag
 		WriteData((int*)0x00495F60, (int)(0x80000 | 0x2400));
 		WriteData((int*)0x00496322, (int)(~(0x80000 | 0x2400)));
-		
+
 		//WriteCall((void*)0x004943BA, sub_42B5A0Hook);
 		WriteCall((void*)0x0049441D, sub_42B5A0Hook);
 		//WriteCall((void*)0x005BFD42, MeteorHerdLandHook); //enable modifiers on land
 		//WriteCall((void*)0x005BFEFD, MeteorHerdLandHook); //enable modifiers on land
-		
+
 
 		//egg quarters pillar modifiers
 		WriteJump((void*)0x690670, sub_690670H);
 
 		//njSetCheapShadowMode, sets opacity for shadows on dc, restored those
-		if (!config->getBool("DCShadows", "UseBattleOpacity", false))
-		{
+		if (!config->getBool("DCShadows", "UseBattleOpacity", false)) {
 			WriteCall((void*)0x00434E9A, DefaultCheapShadow);
 			WriteCall((void*)0x0052ACED, ChaoWorldShadowInit);
 			WriteCall((void*)0x0052AF1B, ChaoWorldShadowExit);
 		}
-		else
+		else {
 			CheapShadow = 0x40;
+		}
 
 		Enemy_Init();
-		ChaoWorld_Init();
+
+		if (config->getBool("DCShadows", "ChaoShadows", true)) {
+			ChaoWorld_Init();
+		}
+
 		TransList_Init();
 		Boss_Init();
 

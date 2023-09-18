@@ -41,7 +41,7 @@ void __cdecl sub_5D0620_ModHook(ObjectMaster* a1)
     sub_5D0620_Mod(a1);
 }
 
-VoidFunc(sub_612C80, 0x612C80);
+ObjectFunc(sub_612C80, 0x612C80);
 FunctionPointer(void, sub_613F20,(int a1),0x613F20);
 
 FunctionPointer(void, sub_782420, (NJS_OBJECT*), 0x782420);
@@ -66,7 +66,7 @@ void __cdecl BossBigBogyDisp(ObjectMaster *a1)
     if (*(char*)(v4 + 1) != 2)
     {
         njPushMatrixEx();
-        sub_612C80();
+        sub_612C80(a1);
         njTranslateV(0, &v5->Position);
         njScaleV_(&v5->Scale);
         v3 = njSin(v7[34]) * 0.9f + 55;
